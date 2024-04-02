@@ -52,10 +52,10 @@ CREATE TABLE `usersToRenew` (
 );
 
 CREATE TABLE `inscription` (
-  `email` varchar(255),
+  `user` varchar(255),
   `event_id` integer,
-  PRIMARY KEY (`email`, `event_id`),
-  FOREIGN KEY (`email`) REFERENCES `user` (`email`),
+  PRIMARY KEY (`user`, `event_id`),
+  FOREIGN KEY (`user`) REFERENCES `user` (`email`),
   FOREIGN KEY (`event_id`) REFERENCES `event` (`id`)
 );
 
