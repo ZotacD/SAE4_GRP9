@@ -73,7 +73,7 @@ CREATE TABLE `product` (
 );
 
 CREATE TABLE `color` (
-  `id` int PRIMARY KEY,
+  `id` int PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(255)
 );
 
