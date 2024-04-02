@@ -60,7 +60,7 @@ CREATE TABLE `inscription` (
 );
 
 CREATE TABLE `product` (
-  `id` int PRIMARY KEY,
+  `id` int PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(255),
   `price` float,
   `description` varchar(255),
