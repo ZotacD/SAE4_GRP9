@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Liste des discussions</title>
+</head>
+<body>
+  <h1>Liste des discussions</h1>
+  <ul id="chat-list"></ul>
+
+  <script>
+    async function getChats() {
+      const response = await fetch('/api/chat/getUserChats', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+          },
+        body: JSON.stringify({email: "admin@univ-lemans.fr"})
+      });
+      const data = await response.json();
+      return data["chats"];
+    }
+
+    function displayChats(chats) {
+      const chatList = document.getElementById('chat-list');
+      chatList.innerHTML = '';
+      chats.forEach(chat => {
+        const listItem = document.createElement('li');
+        listItem.textContent = chat.name_chat;
+        chatList.appendChild(listItem);
+      });
+    }
+    
+    window.onload = (async (ev) => {
+        const chats = await getChats();
+        displayChats(chats);
+    })
+      
+  </script>
+</body>
+</html>

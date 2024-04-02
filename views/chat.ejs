@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/css/chat.css" />
+    <title>ADIIL - CHAT</title>
+    <script src="https://cdn.jsdelivr.net/npm/peerjs@1.3.2/dist/peerjs.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2><%= id_chat %></h2>
+
+        <div id="messages">
+            <div class="message-box sent">
+                <p>Hello!</p>
+            </div>
+            <div class="message-box received">
+                <p>Hi there!</p>
+            </div>
+            <div class="message-box sent">
+                <p>How are you?</p>
+            </div>
+            <div class="message-box received">
+                <p>I'm good, thanks!</p>
+            </div>
+        </div>
+
+        <form class="message-form">
+            <textarea placeholder="Type your message..."></textarea><br>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <script>
+        const peer = new Peer(); // Crée un nouvel objet Peer
+
+        let conn;
+        let state = false;
+
+        peer.on('open', (id) => {
+            console.log('My peer ID is: ' + id);
+            state = true;
+        });
+
+        peer.on('connection', (connection) => {
+            conn = connection;
+            conn.on('data', (data) => {
+                appendMessage('Peer: ' + data);
+            });
+        });
+
+        peer.on('close', () => {
+            state = false;
+          });
+
+        function sendMessage() {
+            const message = document.getElementById('message').value;
+            appendMessage('You: ' + message);
+            conn.send(message);
+            document.getElementById('message').value = '';
+        }
+
+        function appendMessage(message) {
+            const messages = document.getElementById('messages');
+            messages.value += message + '\n';
+            messages.scrollTop = messages.scrollHeight;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Créer une discussion</title>
+  </head>
+  <body>
+    <h1>Créer une discussion</h1>
+    <form id="create-chat-form">
+      <label for="chat-name">Nom de la discussion :</label>
+      <input type="text" id="chat-name" name="chat-name" required />
+      <button type="submit">Créer la discussion</button>
+    </form>
+
+    <h2>Ajouter des membres à la discussion</h2>
+    <form id="add-member-form">
+      <label for="member-email">Adresse e-mail du membre :</label>
+      <input type="email" id="member-email" name="member-email" required />
+      <button type="submit">Ajouter le membre</button>
+    </form>
+
+    <h2>Membres de la discussion</h2>
+    <ul id="member-list"></ul>
+
+    <script>
+      const createChatForm = document.getElementById("create-chat-form");
+      const addMemberForm = document.getElementById("add-member-form");
+      const memberList = document.getElementById("member-list");
+
+      let id_chat = null;
+
+      createChatForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const name_chat = document.getElementById("chat-name").value;
+
+        const response = await fetch("/api/chat/addChat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name_chat: name_chat }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            id_chat = data.id_chat;
+          alert("La discussion a été créée avec succès !");
+        } else {
+          alert("Impossible de créer la discussion.");
+        }
+      });
+
+      addMemberForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        console.log(id_chat)
+
+        if (!id_chat) {
+          alert("Veuillez créer une discussion avant d'ajouter des membres.");
+          return;
+        }
+
+        const email = document.getElementById("member-email").value;
+
+        const response = await fetch(`/api/chat/addChatMember`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: email, id_chat: id_chat }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          const listItem = document.createElement("li");
+          listItem.textContent = email;
+          memberList.appendChild(listItem);
+          alert("Le membre a été ajouté avec succès !");
+        } else {
+          alert("Impossible d'ajouter le membre.");
+        }
+      });
+    </script>
+  </body>
+</html>

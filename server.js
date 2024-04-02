@@ -133,6 +133,20 @@ app.get('/leaderboard', async (req, res) => {
     isLoggedIn: req.session.isLoggedIn,
   });
 });
+
+app.get('/chat/:id_chat', async (req, res) => {
+  res.render('chat', {
+    id_chat: req.params.id_chat
+  });
+});
+
+app.get('/chat/create', async (req, res) => {
+  res.render('createChat');
+});
+
+app.get('/chat/all', async (req, res) => {
+  res.render('listChats');
+});
 //functions stuff
 
 function getVersion() {
@@ -597,6 +611,51 @@ app.use('/api/ndli/getRoom', getNdliRoom);
 
 import getImageLink from './api/divers/getImageLink.js';
 app.use('/getImageLinkPort', getImageLink);
+
+
+
+
+
+
+
+// chat
+import addChat from './api/chat/addChat.js';
+app.use('/api/chat/addChat', addChat);
+
+import addChatMember from './api/chat/addChatMember.js';
+app.use('/api/chat/addChatMember', addChatMember);
+
+import addMessage from './api/chat/addMessage.js';
+app.use('/api/chat/addMessage', addMessage);
+
+import getChat from './api/chat/getChat.js';
+app.use('/api/chat/getChat', getChat);
+
+import getUserChats from './api/chat/getUserChats.js';
+app.use('/api/chat/getUserChats', getUserChats);
+
+import removeChat from './api/chat/removeChat.js';
+app.use('/api/chat/removeChat', removeChat);
+
+import removeChatMember from './api/chat/removeChatMember.js';
+app.use('/api/chat/removeChatMember', removeChatMember);
+
+import updateChat from './api/chat/updateChat.js';
+app.use('/api/chat/updateChat', updateChat);
+
+import searchChatUser from './api/chat/searchUser.js';
+app.use('/api/chat/searchUser', searchChatUser);
+//CHAT
+
+
+
+
+
+
+
+
+
+
 
 app.get('/api/changelogs/:version', (req, res) => {
   const version = req.params.version;

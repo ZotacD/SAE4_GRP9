@@ -115,7 +115,7 @@ CREATE TABLE `transactionContent` (
 
 CREATE TABLE `chat` (
   `id_chat` int PRIMARY KEY AUTO_INCREMENT,
-  `name_chat` varchar(100) NOT NULL
+  `name_chat` text NOT NULL
 );
 
 CREATE TABLE `chat_member` (
@@ -127,10 +127,10 @@ CREATE TABLE `chat_member` (
 );
 
 CREATE TABLE `message` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `id_message` int PRIMARY KEY AUTO_INCREMENT,
   `id_chat` int,
   `email` VARCHAR(255),
-  `contenu` text,
+  `content` text,
   `send_date` datetime,
   FOREIGN KEY (`id_chat`) REFERENCES `chat` (`id_chat`),
   FOREIGN KEY (`email`) REFERENCES `user` (`email`)
@@ -239,9 +239,9 @@ VALUES (
   );
 
 -- chat
-INSERT INTO `chat`
-VALUES (NULL, 'chat_1'),
-  (NULL, 'chat_2');
+-- INSERT INTO `chat`
+-- VALUES (NULL, 'chat_1'),
+--   (NULL, 'chat_2');
 
 -- product
 INSERT INTO `product`
@@ -271,26 +271,26 @@ VALUES (
   );
 
 -- chat_member
-INSERT INTO `chat_member`
-VALUES ('John.Doe.Etu@univ-lemans.fr', 1),
-  ('admin@univ-lemans.fr', 1);
+-- INSERT INTO `chat_member`
+-- VALUES ('John.Doe.Etu@univ-lemans.fr', 1),
+--   ('admin@univ-lemans.fr', 1);
 
 -- message
-INSERT INTO `message`
-VALUES (
-    NULL,
-    1,
-    'John.Doe.Etu@univ-lemans.fr',
-    'Contenu du message 1',
-    '2024-01-21 22:38:18'
-  ),
-  (
-    NULL,
-    1,
-    'admin@univ-lemans.fr',
-    'Contenu du message 2',
-    '2024-01-21 22:38:18'
-  );
+-- INSERT INTO `message`
+-- VALUES (
+--     NULL,
+--     1,
+--     'John.Doe.Etu@univ-lemans.fr',
+--     'Contenu du message 1',
+--     '2024-01-21 22:38:18'
+--   ),
+--   (
+--     NULL,
+--     1,
+--     'admin@univ-lemans.fr',
+--     'Contenu du message 2',
+--     '2024-01-21 22:38:18'
+--   );
 
 -- event
 INSERT INTO `event`
