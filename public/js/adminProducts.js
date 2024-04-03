@@ -31,14 +31,18 @@ function closePopup() {
 }
 
 function deleteProduct(id) {
-  const idProduct = id;
-
-  //send the form data
+ 
+  const product = products.find((product) => product.id == id);
+  if (!product) return userAlert('Produit introuvable');
+ 
   fetch('/api/admin/product/remove', {
     method: 'POST',
-    body : {
-      idProduct : req.body["id"]
-    }
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      id: id
+    })
   })
     .then((res) => res.json())
     .then((data) => {
