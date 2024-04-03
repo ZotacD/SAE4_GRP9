@@ -122,11 +122,13 @@
             }).then((response) => {
                 if(response.status === 500) {
                     console.error('Server error')
-                    alert('Une erreur est survenue, veuillez réessayer plus tard')
-
+                    userAlert('Une erreur est survenue, veuillez réessayer plus tard')
                 } else if(response.status === 409){
                     console.error('User not found')
-                    alert('Aucun compte n\'est associé à cette adresse mail')
+                    userAlert('Aucun compte n\'est associé à cette adresse mail')
+                } else if(response.status === 410){
+                    console.error('User not found')
+                    userAlert('Email non similaire à l\'email de votre compte')
                 } else if(response.status === 200){
                     window.location.reload();
                 }
@@ -147,11 +149,11 @@
             }).then((response) => {
                 if(response.status === 500) {
                     console.error('Server error')
-                    alert('Une erreur est survenue, veuillez réessayer plus tard')
+                    userAlert('Une erreur est survenue, veuillez réessayer plus tard')
 
                 } else if(response.status === 403){
                     console.error('Wrong code')
-                    alert('Le code entré est incorrect')
+                    userAlert('Le code entré est incorrect')
                     window.location.reload();
                 }else if(response.status === 200) {
                     window.location.reload();
@@ -173,11 +175,11 @@
             }).then((response) => {
                 if(response.status === 500) {
                     console.error('Server error')
-                    alert('Une erreur est survenue, veuillez réessayer plus tard')
+                    userAlert('Une erreur est survenue, veuillez réessayer plus tard')
 
                 } else if(response.status === 403){
                     console.error('Wrong code')
-                    alert('Les mots de passe ne correspondent pas')
+                    userAlert('Les mots de passe ne correspondent pas')
                 }else if(response.status === 200) {
                     window.location.href = '/login';
                 }
