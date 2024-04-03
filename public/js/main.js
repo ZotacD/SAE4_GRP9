@@ -169,18 +169,22 @@ nonInfoRegisterForm.addEventListener('submit', (e) => {
 
   const name = document.getElementById('name').value;
 
-  fetch('/api/account/nonInfoRegister', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({name}),
-  }).then((response) => {
-    if (response.status === 409) {
-      userAlert('Nom déjà utilisé');
-    } else if (response.status === 200) {
-      window.location.href = returnUrl;
-    }
-  });
+  if (name === ''){
+    userAlert('Veuillez entrer un pseudo');
+  }else{
+    fetch('/api/account/nonInfoRegister', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({name}),
+    }).then((response) => {
+      if (response.status === 409) {
+        userAlert('Nom déjà utilisé');
+      } else if (response.status === 200) {
+        window.location.href = returnUrl;
+      }
+    });
+  };
 });
 // Function to handle form submission for registration
