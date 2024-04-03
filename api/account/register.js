@@ -23,7 +23,7 @@ router.post('', async (req, res) => {
     return;
   }
 
-  const [exists] = await pool.query(
+  const [existsMail] = await pool.query(
     'SELECT * FROM user WHERE email = ?',
     [email],
     (err, results) => {
@@ -35,8 +35,25 @@ router.post('', async (req, res) => {
     }
   );
 
-  if (exists.length > 0) {
+  const [existsName] = await pool.query(
+    'SELECT * FROM user WHERE username = ?',
+    [username],
+    (err, results) => {
+      if (err) {
+        console.error('Impossible de créer le compte :', err);
+        res.status(500).json({error: 'Impossible de créer le compte'});
+        return;
+      }
+    }
+  );
+
+  if (existsMail.length > 0) {
     res.status(409).json({error: 'Email déjà utilisée'});
+    return;
+  }
+
+  if (existsName.length > 0) {
+    res.status(410).json({error: 'Nom déjà utilisé'});
     return;
   }
 
