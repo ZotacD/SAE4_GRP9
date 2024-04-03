@@ -55,7 +55,7 @@ router.get('/products', async (req, res) => {
     }
 
     const [products] = await pool.query(
-      'SELECT product.*, COUNT(transaction_id) as sales_count FROM product LEFT JOIN transactionContent ON product.id = transactionContent.product_id GROUP BY (product.id)'
+      'SELECT product.*, COUNT(transaction_id) as sales_count FROM product LEFT JOIN transactionContent ON product.id = transactionContent.product_id WHERE id <> 1 GROUP BY (product.id)'
     );
 
     res.render('admin-products', {

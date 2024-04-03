@@ -246,10 +246,22 @@ VALUES (NULL, 'chat_1'),
 -- product
 INSERT INTO `product`
 VALUES (
+    1,
+    'Produit supprimé',
+    0,
+    'Produit supprimé',
+    '',
+    '2024-01-24 19:00:00',
+    '2024-01-24 20:00:00',
+    NULL,
+    NULL,
+    NULL
+  ),
+  (
     2,
     'Pull 2023-2024',
     27.5,
-    'Le pull officiel du département informatique pour l\'année 2023-2024. Design par Mathéo Orgé.',
+    'Le pull officiel du département informatique pour l\ année 2023-2024. Design par Mathéo Orgé.',
     'image-1706202613813.png',
     '2024-01-24 19:00:00',
     '2024-02-15 20:00:00',
