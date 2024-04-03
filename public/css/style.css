@@ -898,6 +898,8 @@ em {
 }
 
 #loginPassword,
+#loginPassword1,
+#loginPassword2,
 #registerPassword {
     margin-bottom: 0 !important;
 }
