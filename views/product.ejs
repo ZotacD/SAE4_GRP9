@@ -105,7 +105,7 @@
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
-            location.href = '/pay';
+            location.href = '/shop';
           } else {
             userAlert('Une erreur est survenue : ' + data.message);
           }
