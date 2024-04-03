@@ -19,7 +19,7 @@ router.post('', async (req, res) => {
       [peer_id, connect_date, id_chat, email],
     )
 
-    if (result.affectedRows === 0) {
+    if (result[0].affectedRows === 0) {
       res.status(404).json({ error: 'Connexion non trouvée' });
       return;
     }

@@ -20,7 +20,7 @@
         headers: {
             "Content-Type": "application/json",
           },
-        body: JSON.stringify({email: "admin@univ-lemans.fr"})
+        body: JSON.stringify({email: email})
       });
       const data = await response.json();
       return data["chats"];

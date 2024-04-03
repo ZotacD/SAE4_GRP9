@@ -11,7 +11,9 @@ router.get('/create', async (req, res) => {
   }
 
   try {
-    res.render("createChat")
+    res.render("createChat", {
+      email: req.session.email
+    })
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Erreur serveur');

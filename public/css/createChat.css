@@ -8,7 +8,7 @@ body {
   h1,
   h2 {
     text-align: center;
-    margin-top: 50px;
+    margin-top: 20px;
     color: #333;
   }
   
@@ -16,7 +16,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 50px auto;
+    margin: 20px auto;
     width: 300px;
   }
   
@@ -40,6 +40,9 @@ body {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+
+    display: block;
+    margin: 20px auto;
   }
   
   button:hover {
@@ -51,16 +54,23 @@ body {
     margin: 0;
     padding: 0;
     width: 300px;
-    margin: 50px auto;
+    margin: 20px auto;
   }
   
   #member-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 5px;
     padding: 10px;
     margin-bottom: 10px;
-  }
+    }
+    
+    #member-list li button {
+    margin-left: 10px;
+    }
   
   #validate-chat-btn {
     margin: 20px auto;

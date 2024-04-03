@@ -2091,6 +2091,11 @@ p.pdfText {
         -webkit-mask-image: url("/images/house.svg");
     }
 
+    header>a:nth-child(6)::before {
+        mask-image: url("/images/message.svg");
+        -webkit-mask-image: url("/images/message.svg");
+    }
+
     header>a:nth-child(4)::before {
         mask-image: url("/images/tag.svg");
         -webkit-mask-image: url("/images/tag.svg");

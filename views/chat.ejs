@@ -64,7 +64,7 @@
           peer.on('connection', (connection) => {
               connection.on('open', () => {
                   connection.on('data', (data) => {
-                      appendMessage('Peer: ' + data, true);
+                      appendMessage(data, true);
                   });
               });
           });

@@ -7,22 +7,15 @@ router.post('', async (req, res) => {
     const id_chat = req.body['id_chat'];
     const email = req.params['email'];
 
-    await pool.query(
+    const result = await pool.query(
       'DELETE FROM chat_member WHERE email = ? AND id_chat = ?',
       [email, id_chat],
-      (err, result) => {
-        if (err) {
-          console.error('Impossible de supprimer le membre de la discussion :', err);
-          res.status(500).json({ error: 'Impossible de supprimer le membre de la discussion' });
-          return;
-        }
-
-        if (result.affectedRows === 0) {
-          res.status(404).json({ error: 'Membre non trouvé dans la discussion' });
-          return;
-        }
-      }
     );
+
+    if (result[0].affectedRows === 0) {
+      res.status(404).json({ error: 'Membre non trouvé dans la discussion' });
+      return;
+    }
 
     res.json({
       email: email,

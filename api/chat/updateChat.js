@@ -7,6 +7,9 @@ router.post('', async (req, res) => {
     const id_chat = req.body['id_chat'];
     const name_chat = req.body['name_chat'];
 
+    console.log(id_chat)
+    console.log(name_chat)
+
     if (!name_chat) {
       res.status(400).json({ error: 'Le nouveau nom de la discussion est requis' });
       return;
@@ -17,7 +20,7 @@ router.post('', async (req, res) => {
       [name_chat, id_chat],
     )
 
-    if (result.affectedRows === 0) {
+    if (result[0].affectedRows === 0) {
       res.status(404).json({ error: 'Discussion non trouvée' });
       return;
     }
