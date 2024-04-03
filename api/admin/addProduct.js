@@ -32,7 +32,7 @@ router.post('', upload.single('image'), async (req, res) => {
       return;
     }
     //extract data from multipart form
-    var {
+    let {
       name,
       description,
       price,
@@ -48,6 +48,16 @@ router.post('', upload.single('image'), async (req, res) => {
       confirm_threashold = null;
     }
 
+    price = price.replace(',', '.');
+
+    if (parseFloat(price) <= 0 || isNaN(parseFloat(price))) {
+      if (req.file) {
+        fs.unlinkSync(req.file.path);
+      }
+      res.status(403).json({success: false, message: 'Le prix doit être strictement positif'});
+      return;
+    }
+
     if (
       !is_promoted ||
       is_promoted === '0' ||
@@ -60,7 +70,6 @@ router.post('', upload.single('image'), async (req, res) => {
       is_promoted = 1;
     }
 
-    //check all the fields are filled
     if (
       name === '' ||
       description === '' ||
@@ -92,7 +101,6 @@ router.post('', upload.single('image'), async (req, res) => {
       }
     }
 
-    var sizes;
     if (sizes === '') {
       sizes = null;
     } else {
