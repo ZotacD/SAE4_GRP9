@@ -136,6 +136,40 @@ CREATE TABLE `message` (
   FOREIGN KEY (`email`) REFERENCES `user` (`email`)
 );
 
+CREATE TABLE `chat_connection` (
+  `id_chat` int,
+  `email` VARCHAR(255),
+  `peer_id` VARCHAR(255),
+  `connect_date` datetime,
+  PRIMARY KEY(`id_chat`, `email`),
+  FOREIGN KEY (`id_chat`) REFERENCES `chat` (`id_chat`),
+  FOREIGN KEY (`email`) REFERENCES `user` (`email`)
+);
+
+
+
+DELIMITER //
+CREATE TRIGGER delete_chat_after_last_member_deleted
+AFTER DELETE ON chat_connection
+FOR EACH ROW
+BEGIN
+  -- Récupère l'ID du chat depuis la table deleted
+  DECLARE id_chat INT;
+  SET id_chat = OLD.id_chat;
+
+  -- Vérifie s'il s'agit de la dernière relation pour ce chat
+  IF (SELECT COUNT(*) FROM chat_member WHERE id_chat = id_chat) = 0 AND (SELECT COUNT(*) FROM chat_connection WHERE id_chat = id_chat) = 0 THEN
+  BEGIN
+    -- Supprime le chat de la table chat
+    DELETE FROM message WHERE id_chat = id_chat;
+    DELETE FROM chat WHERE id_chat = id_chat;
+  END;
+  END IF;
+END//
+DELIMITER ;
+
+
+
 
 
 

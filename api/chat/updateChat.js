@@ -12,22 +12,15 @@ router.post('', async (req, res) => {
       return;
     }
 
-    await pool.query(
+    const result = await pool.query(
       'UPDATE chat SET name_chat = ? WHERE id_chat = ?',
       [name_chat, id_chat],
-      (err, result) => {
-        if (err) {
-          console.error('Impossible de mettre à jour la discussion :', err);
-          res.status(500).json({ error: 'Impossible de mettre à jour la discussion' });
-          return;
-        }
+    )
 
-        if (result.affectedRows === 0) {
-          res.status(404).json({ error: 'Discussion non trouvée' });
-          return;
-        }
-      }
-    );
+    if (result.affectedRows === 0) {
+      res.status(404).json({ error: 'Discussion non trouvée' });
+      return;
+    }
 
     res.json({
       id_chat: id_chat,

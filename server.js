@@ -134,19 +134,8 @@ app.get('/leaderboard', async (req, res) => {
   });
 });
 
-app.get('/chat/:id_chat', async (req, res) => {
-  res.render('chat', {
-    id_chat: req.params.id_chat
-  });
-});
-
-app.get('/chat/create', async (req, res) => {
-  res.render('createChat');
-});
-
-app.get('/chat/all', async (req, res) => {
-  res.render('listChats');
-});
+import chatRouter from './router/chat.js';
+app.use('/chat', chatRouter);
 //functions stuff
 
 function getVersion() {
@@ -628,23 +617,38 @@ app.use('/api/chat/addChatMember', addChatMember);
 import addMessage from './api/chat/addMessage.js';
 app.use('/api/chat/addMessage', addMessage);
 
+import getMessages from './api/chat/getMessages.js';
+app.use('/api/chat/getMessages', getMessages);
+
 import getChat from './api/chat/getChat.js';
 app.use('/api/chat/getChat', getChat);
 
 import getUserChats from './api/chat/getUserChats.js';
 app.use('/api/chat/getUserChats', getUserChats);
 
-import removeChat from './api/chat/removeChat.js';
-app.use('/api/chat/removeChat', removeChat);
+import deleteChat from './api/chat/deleteChat.js';
+app.use('/api/chat/deleteChat', deleteChat);
 
-import removeChatMember from './api/chat/removeChatMember.js';
-app.use('/api/chat/removeChatMember', removeChatMember);
+import deleteChatMember from './api/chat/deleteChatMember.js';
+app.use('/api/chat/deleteChatMember', deleteChatMember);
 
 import updateChat from './api/chat/updateChat.js';
 app.use('/api/chat/updateChat', updateChat);
 
-import searchChatUser from './api/chat/searchUser.js';
-app.use('/api/chat/searchUser', searchChatUser);
+import searchChatUser from './api/chat/searchChatUser.js';
+app.use('/api/chat/searchChatUser', searchChatUser);
+
+import addConnection from './api/chat/addConnection.js';
+app.use('/api/chat/addConnection', addConnection);
+
+import getConnections from './api/chat/getConnections.js';
+app.use('/api/chat/getConnections', getConnections);
+
+import updateConnection from './api/chat/updateConnection.js';
+app.use('/api/chat/updateConnection', updateConnection);
+
+import getConnection from './api/chat/getConnection.js';
+app.use('/api/chat/getConnection', getConnection);
 //CHAT
 
 

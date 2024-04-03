@@ -5,10 +5,11 @@ const router = express.Router();
 router.post('', async (req, res) => {
   try {
     const id_chat = req.body.id_chat;
+    const email = req.body.email;
 
     const [results] = await pool.query(
-      'SELECT chat.id_chat, chat.name_chat FROM chat WHERE chat.id_chat = ?',
-      [id_chat]
+      'SELECT peer_id FROM chat_connection WHERE id_chat = ? AND email = ? LIMIT 1',
+      [id_chat, email]
     );
 
     if(results.length == 0) {
@@ -17,13 +18,12 @@ router.post('', async (req, res) => {
     }
 
     res.json({
-      id_chat: results[0].id_chat,
-      name_chat: results[0].name_chat,
+      peer_id: results[0]["peer_id"],
       success: true,
     });
   } catch (err) {
-    console.error('Impossible de récupérer la discussion :', err);
-    res.status(500).json({ error: 'Impossible de récupérer la discussion' });
+    console.error('Impossible de récupérer la connexion :', err);
+    res.status(500).json({ error: 'Impossible de récupérer la connexion' });
   }
 });
 

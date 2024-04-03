@@ -9,64 +9,142 @@
     <script src="https://cdn.jsdelivr.net/npm/peerjs@1.3.2/dist/peerjs.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h2><%= id_chat %></h2>
+    <div id="container">
+        <button onclick="window.location.href='/chat/all'" >Retour</button>
+        <h2><%= name_chat %></h2>
 
         <div id="messages">
-            <div class="message-box sent">
-                <p>Hello!</p>
-            </div>
-            <div class="message-box received">
-                <p>Hi there!</p>
-            </div>
-            <div class="message-box sent">
-                <p>How are you?</p>
-            </div>
-            <div class="message-box received">
-                <p>I'm good, thanks!</p>
-            </div>
         </div>
 
-        <form class="message-form">
-            <textarea placeholder="Type your message..."></textarea><br>
+        <form id="message-form">
+            <textarea id="message" placeholder="Écrivez votre message..."></textarea><br>
             <button type="submit">Send</button>
         </form>
     </div>
 
-    <script>
-        const peer = new Peer(); // Crée un nouvel objet Peer
+    <script defer>
+        const container = document.getElementById("container");
+        const messageForm = document.querySelector("#message-form");
+        const messageInput = document.getElementById('message');
+        const messagesDiv = document.getElementById('messages');
 
-        let conn;
-        let state = false;
+        messageForm.addEventListener("submit", async (ev) => {
+            ev.preventDefault();
+            await sendMessage(peer);
+        })
 
-        peer.on('open', (id) => {
-            console.log('My peer ID is: ' + id);
-            state = true;
-        });
+        const id_chat = "<%- id_chat %>";
+        const email = "<%- email %>";
+        const connections = <%- JSON.stringify(connections) %>; 
+        const messages = <%- JSON.stringify(messages) %>; 
+        const username = "<%- username %>";
 
-        peer.on('connection', (connection) => {
-            conn = connection;
-            conn.on('data', (data) => {
-                appendMessage('Peer: ' + data);
+        let peer;
+      
+        function appendMessage(message, isReceived) {
+          let messageDivElement = document.createElement("div");
+          messageDivElement.classList.add("message-box");
+
+          if(isReceived) {
+            messageDivElement.classList.add("received")
+          }else {
+            messageDivElement.classList.add("sent")
+          }
+
+          let messageParagElemnt = document.createElement('p')
+          messageParagElemnt.innerText = message
+
+          messageDivElement.appendChild(messageParagElemnt)
+      
+          messagesDiv.appendChild(messageDivElement);
+          messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+      
+        function handleIncomingConnection(peer) {
+          peer.on('connection', (connection) => {
+              connection.on('open', () => {
+                  connection.on('data', (data) => {
+                      appendMessage('Peer: ' + data, true);
+                  });
+              });
+          });
+        }
+
+        async function sendMessage(peer) {
+            const message = username.toLocaleUpperCase() + " : " + messageInput.value;
+    
+            const response = await fetch('/api/chat/addMessage', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({id_chat: id_chat, email: email, content: message})
             });
-        });
-
-        peer.on('close', () => {
-            state = false;
+            const data = await response.json();
+    
+            appendMessage(message, false);
+    
+            connections.forEach((conn) => {
+                  sendPeerMessage(peer, conn.peer_id, message)
+            });
+    
+            messageInput.value = '';
+        }
+      
+        async function sendPeerMessage(peer, peer_id, message) {
+          const connection = peer.connect(peer_id);
+          connection.on('open', async () => {
+            connection.send(message)
+          });
+      
+          connection.on('close', (err) => {
           });
 
-        function sendMessage() {
-            const message = document.getElementById('message').value;
-            appendMessage('You: ' + message);
-            conn.send(message);
-            document.getElementById('message').value = '';
+          connection.on('error', (err) => {
+          });
         }
 
-        function appendMessage(message) {
-            const messages = document.getElementById('messages');
-            messages.value += message + '\n';
-            messages.scrollTop = messages.scrollHeight;
+        async function getConnection() {
+            const response = await fetch('/api/chat/getConnection', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({id_chat: id_chat, email: email})
+            });
+            const data = await response.json();
+            return data
         }
-    </script>
+      
+        window.onload = async () => {
+          const data = await getConnection()
+          if(!data.success) {
+              alert("Erreur récupération user peer_id");
+              return;
+          }
+      
+          peer = new Peer(data["peer_id"]);
+      
+          peer.on('open', async (id) => {
+              handleIncomingConnection(peer);
+          });
+      
+          peer.on('close', () => {
+          });
+      
+          peer.on('error', (e) => {
+          });
+
+          messages.forEach((message) => {
+            if(email == message["email"]) {
+                appendMessage(message["content"], false)
+            }else {
+                appendMessage(message["content"], true)
+            }
+          })
+        }
+      </script>
+      
+    
 </body>
 </html>

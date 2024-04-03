@@ -9,7 +9,7 @@ body {
 
     height: 100vh;
 }
-.container {
+#container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
@@ -32,11 +32,11 @@ body {
     margin: 0;
     padding: 0;
 }
-.message-form {
-    height: calc(20% - 80px);
+#message-form {
+    max-height: 40%;
     margin-top: 20px;
 }
-.message-form textarea {
+#message-form textarea {
     width: calc(100% - 20px);
     height: 60px;
     padding: 5px;
@@ -45,7 +45,7 @@ body {
     border-radius: 5px;
     resize: none;
 }
-.message-form button {
+button {
     padding: 10px 20px;
     background-color: #007bff;
     color: #fff;
@@ -55,6 +55,6 @@ body {
 }
 
 #messages {
-    height: 80%; /* Définissez une hauteur maximale pour la boîte de messages pour qu'elle devienne scrollable */
+    height: 60%; /* Définissez une hauteur maximale pour la boîte de messages pour qu'elle devienne scrollable */
     overflow-y: auto;
 }

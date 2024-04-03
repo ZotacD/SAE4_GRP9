@@ -10,15 +10,17 @@ router.post('', async (req, res) => {
     const content = req.body["content"];
     const send_date = new Date();
 
+    console.log([id_chat, email, content, send_date])
+
     const result = await pool.query(
         'INSERT INTO message (id_message, id_chat, email, content, send_date) VALUES (NULL, ?, ?, ?, ?)',
         [id_chat, email, content, send_date],
       );
-
+      
     id_message = result[0].insertId;
 
     res.json({
-        id_message: id_chat,
+        id_message: id_message,
         success: true
     });
   } catch (err) {
