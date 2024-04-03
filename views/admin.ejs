@@ -96,7 +96,7 @@
             name="xpAmount"
             id="xpAmount"
             class="gradeprice xpamount"
-            value="<%- xpAmount %>"
+            value="<%- process.env.xpAmount %>"
           />
           <button type="submit">Valider</button>
         </span>
@@ -114,7 +114,7 @@
             name="xpThreshold"
             id="xpThreshold"
             class="gradeprice xpamount"
-            value="<%- xpThreshold %>"
+            value="<%- process.env.xpThreshold %>"
           />
           <button type="submit">Valider</button>
         </span>
@@ -617,7 +617,7 @@
       const data = {
         xpAmount,
       };
-      fetch('/admin/changeXp', {
+      fetch('/api/admin/changeXpAmount', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -629,6 +629,7 @@
           window.location.reload();
         } else if (res.status === 400) {
           userAlert("La quantité d'xp doit être un nombre");
+          
         } else {
           userAlert('Erreur lors de la modification des xp');
         }

@@ -48,6 +48,11 @@ router.post('', upload.single('image'), async (req, res) => {
       confirm_threashold = null;
     }
 
+    if (release_date > expire_date){
+      res.status(403).json({success: false, message: 'Enter valide data'});
+      return;
+    }
+
     if (!name || !description || !price || !release_date || !expire_date) {
       // Supprimer le fichier téléchargé s'il existe
       if (req.file) {

@@ -14,6 +14,7 @@ router.post('', async (req, res) => {
 
   var xpAmount = req.body.xpAmount;
 
+  // Enregistrer la valeur de xpAmount dans une variable d'environnement
   process.env.XP_AMOUNT = xpAmount;
 
   res.status(200).json({success: true});

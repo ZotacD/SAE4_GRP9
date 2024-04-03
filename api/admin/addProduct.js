@@ -84,6 +84,10 @@ router.post('', upload.single('image'), async (req, res) => {
       res.status(403).json({success: false, message: 'Missing data'});
       return;
     }
+    if (release_date > expire_date){
+      res.status(403).json({success: false, message: 'Enter valide data'});
+      return;
+    }
     var colors;
     if (color === '') {
       color = null;
