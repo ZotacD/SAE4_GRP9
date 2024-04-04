@@ -1,0 +1,60 @@
+body {
+    padding: 0;
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    box-sizing: border-box;
+    font-weight: 500;
+    background-color: var(--background-color);
+    overflow-x: hidden;
+
+    height: 100vh;
+}
+#container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+
+    height: calc(100% - 40px);
+}
+.message-box {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.message-box.sent {
+    background-color: #f2f2f2;
+}
+.message-box.received {
+    background-color: #e6f7ff;
+}
+.message-box p {
+    margin: 0;
+    padding: 0;
+}
+#message-form {
+    max-height: 40%;
+    margin-top: 20px;
+}
+#message-form textarea {
+    width: calc(100% - 20px);
+    height: 60px;
+    padding: 5px;
+    margin: 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
+}
+button {
+    padding: 10px 20px;
+    background-color: #313131;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#messages {
+    height: 60%; /* Définissez une hauteur maximale pour la boîte de messages pour qu'elle devienne scrollable */
+    overflow-y: auto;
+}

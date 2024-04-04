@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Liste des discussions</title>
+  <link rel="stylesheet" href="/css/listChats.css">
+</head>
+<body>
+  <button id="backButton" onclick="window.location.href='/'" >Retour</button>
+  <h1>Liste des discussions</h1>
+  <button onclick="window.location.href='/chat/create'" >Créer une discussion</button>
+  <ul id="chat-list"></ul>
+
+  <script>
+    const email = "<%- email %>";
+
+    async function getChats() {
+      const response = await fetch('/api/chat/getUserChats', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+          },
+        body: JSON.stringify({email: email})
+      });
+      const data = await response.json();
+      return data["chats"];
+    }
+
+    function displayChats(chats) {
+      const chatList = document.getElementById('chat-list');
+      chatList.innerHTML = '';
+      chats.forEach(chat => {
+        const listItem = document.createElement('li');
+        listItem.textContent = chat.name_chat;
+        listItem.onclick = (() => window.location.href = "/chat/" + chat["id_chat"])
+
+        const leaveButton = document.createElement('button');
+        leaveButton.textContent = 'Quitter';
+        leaveButton.onclick = async (event) => {
+          event.stopPropagation(); // Ajouter cette ligne
+          await leaveChat(chat.id_chat);
+        };
+
+        listItem.appendChild(leaveButton);
+        chatList.appendChild(listItem);
+      });
+    }
+
+    async function leaveChat(id_chat) {
+      let response = await fetch('https://localhost:8000/api/chat/deleteChat', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({id_chat: id_chat, email: email})
+      });
+      let data = await response.json();
+      if(data.success) {
+        alert("Vous venez quitter cette discussion.")
+        window.location.reload()
+      }else {
+        alert("Impossible de quitter cette discussion.")
+      }
+    }
+
+    window.onload = (async (ev) => {
+        const chats = await getChats();
+        displayChats(chats);
+    })
+
+  </script>
+</body>
+</html>
