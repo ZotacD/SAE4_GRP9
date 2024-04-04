@@ -7,15 +7,35 @@ body {
     background-color: var(--background-color);
     overflow-x: hidden;
 
+    display: flex; /* Ajouter cette ligne */
+    justify-content: center; /* Ajouter cette ligne */
+
     height: 100vh;
 }
 #container {
-    max-width: 800px;
+    width: 100%;
     margin: 0 auto;
     padding: 20px;
 
     height: calc(100% - 40px);
+
+    display: flex; /* Ajouter cette ligne */
 }
+
+#backButton {
+    border-radius: 0;
+}
+
+#backButton img {
+    width: 30px;
+    height: auto;
+    filter: invert(100%) sepia(100%) saturate(1%) hue-rotate(116deg) brightness(106%) contrast(101%);
+}
+
+#chat-container {
+    width: 100%; /* Ajouter cette ligne */
+}
+
 .message-box {
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -54,7 +74,50 @@ button {
     cursor: pointer;
 }
 
+#sidebar {
+    width: 300px; /* Ajuster la largeur de la sidebar */
+    margin-left: 20px; /* Ajouter cette ligne */
+}
+
 #messages {
     height: 60%; /* Définissez une hauteur maximale pour la boîte de messages pour qu'elle devienne scrollable */
     overflow-y: auto;
+}
+
+#add-user-form {
+    margin-top: 20px;
+}
+
+#add-user-form input[type="email"] {
+    width: calc(100% - 20px);
+    height: 40px;
+    padding: 5px;
+    margin: 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#add-user-form button {
+    margin-top: 20px;
+}
+
+#users-list {
+    margin-top: 20px;
+    height: 60%; /* Définissez une hauteur maximale pour la boîte de messages pour qu'elle devienne scrollable */
+    overflow-y: auto;
+}
+
+#users-list h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+#users-list ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#users-list li {
+    margin-bottom: 10px;
 }

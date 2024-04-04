@@ -649,6 +649,9 @@ app.use('/api/chat/updateConnection', updateConnection);
 
 import getConnection from './api/chat/getConnection.js';
 app.use('/api/chat/getConnection', getConnection);
+
+import getChatUsers from './api/chat/getChatUsers.js';
+app.use('/api/chat/getChatUsers', getChatUsers);
 //CHAT
 
 
