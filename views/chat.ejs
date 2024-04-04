@@ -65,7 +65,7 @@
         const email = "<%- email %>";
         const messages = <%- JSON.stringify(messages) %>; 
         const username = "<%- username %>";
-        const host = "<%- host %>";
+        const ip = "<%- ip %>";
         const port = <%- port %>;
 
         async function getConnections() {
@@ -261,7 +261,7 @@
           }
       
           peer = new Peer(data["peer_id"], {
-                host: host,
+                host: ip,
                 port: port,
                 path: '/peerjs',
             }

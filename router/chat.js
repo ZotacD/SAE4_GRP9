@@ -48,7 +48,7 @@ router.get('/all', async (req, res) => {
     try {
         const id_chat = req.params.id_chat;
 
-        let response = await fetch('https://localhost:'+ process.env.PORT +'/api/chat/getChat', {
+        let response = await fetch('https://' + process.env.IP + ':'+ process.env.PORT +'/api/chat/getChat', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -64,7 +64,7 @@ router.get('/all', async (req, res) => {
 
         const name_chat = data["name_chat"]
 
-        response = await fetch('https://localhost:'+ process.env.PORT +'/api/chat/getMessages', {
+        response = await fetch('https://' + process.env.IP + ':'+ process.env.PORT +'/api/chat/getMessages', {
           method: "POST",
           headers: {
               "Content-Type": "application/json",
@@ -75,7 +75,7 @@ router.get('/all', async (req, res) => {
 
         const messages = data["messages"]
 
-        response = await fetch('https://localhost:'+ process.env.PORT +'/api/chat/getConnections', {
+        response = await fetch('https://' + process.env.IP + ':'+ process.env.PORT +'/api/chat/getConnections', {
           method: "POST",
           headers: {
               "Content-Type": "application/json",
@@ -99,7 +99,7 @@ router.get('/all', async (req, res) => {
             connections: connections,
             username: req.session.username,
             port: process.env.PORT,
-            host: process.env.HOST
+            ip: process.env.IP
         })
     } catch (err) {
       console.error(err.message);
