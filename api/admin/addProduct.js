@@ -48,7 +48,15 @@ router.post('', upload.single('image'), async (req, res) => {
       confirm_threashold = null;
     }
 
-    let exists;
+    price = price.replace(',', '.');
+
+    if (parseFloat(price) <= 0 || isNaN(parseFloat(price))) {
+      if (req.file) {
+        fs.unlinkSync(req.file.path);
+      }
+      res.status(403).json({success: false, message: 'Le prix doit être strictement positif'});
+
+      let exists;
 
     try {
       // Check if a product is already promoted
