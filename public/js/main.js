@@ -90,6 +90,8 @@ if (registerForm.classList.contains('emailSubmit')) {
 
       if (response.status === 409) {
         userAlert('Adresse mail déjà utilisée');
+      } else if (response.status === 410) {
+        userAlert('Pseudo déjà utilisé');
       } else if (response.status === 403) {
         userAlert(
           'Si vous réésayez, votre compte sera bani et vous serez signalé au département'
@@ -142,6 +144,8 @@ if (registerForm.classList.contains('emailSubmit')) {
           );
         } else if (response.status === 409) {
           userAlert('Adresse mail déjà utilisée');
+        } else if (response.status === 410) {
+          userAlert('Pseudo déjà utilisé');
         } else if (response.status === 500) {
           userAlert(
             'Impossible de créer le compte, merci de réessayer plus tard'
@@ -169,18 +173,22 @@ nonInfoRegisterForm.addEventListener('submit', (e) => {
 
   const name = document.getElementById('name').value;
 
-  fetch('/api/account/nonInfoRegister', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({name}),
-  }).then((response) => {
-    if (response.status === 409) {
-      userAlert('Nom déjà utilisé');
-    } else if (response.status === 200) {
-      window.location.href = returnUrl;
-    }
-  });
+  if (name === ''){
+    userAlert('Veuillez entrer un pseudo');
+  }else{
+    fetch('/api/account/nonInfoRegister', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({name}),
+    }).then((response) => {
+      if (response.status === 409) {
+        userAlert('Nom déjà utilisé');
+      } else if (response.status === 200) {
+        window.location.href = returnUrl;
+      }
+    });
+  };
 });
 // Function to handle form submission for registration

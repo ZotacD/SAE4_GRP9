@@ -11,10 +11,10 @@ var storage = multer.diskStorage({
     );
   },
 });
-const upload = multer({storage: storage});
+const upload = multer({ storage: storage });
 const router = express.Router();
 
-import {pool} from '../../server.js';
+import { pool } from '../../server.js';
 
 router.post('', upload.single('image'), async (req, res) => {
   try {
@@ -28,7 +28,7 @@ router.post('', upload.single('image'), async (req, res) => {
     }
 
     if (req.body.length === 0) {
-      res.status(403).json({success: false, message: 'No data provided'});
+      res.status(403).json({ success: false, message: 'No data provided' });
       return;
     }
     //extract data from multipart form
@@ -46,6 +46,19 @@ router.post('', upload.single('image'), async (req, res) => {
 
     if (confirm_threashold === '' || confirm_threashold === '0') {
       confirm_threashold = null;
+    }
+
+    let exists;
+
+    try {
+      // Check if a product is already promoted
+      [exists] = await pool.query(
+        'SELECT * FROM product WHERE is_promoted = 1;',
+      );
+    } catch (err){
+      console.error('Impossible de récupérer le produit mis en avant :', err);
+      res.status(500).json({ error: 'Impossible de récupérer le produit mis en avant' });
+      return;
     }
 
     price = price.replace(',', '.');
@@ -66,6 +79,9 @@ router.post('', upload.single('image'), async (req, res) => {
       is_promoted === 'off'
     ) {
       is_promoted = 0;
+    } else if(exists.length > 0){
+      res.status(410).json({ success: false, message: 'Impossible de créer le produit, un autre est déjà mis en avant.\n Veuillez d\'abord modifier celui mis en avant' });
+      return;
     } else {
       is_promoted = 1;
     }
@@ -81,7 +97,7 @@ router.post('', upload.single('image'), async (req, res) => {
       if (req.file) {
         fs.unlinkSync(req.file.path);
       }
-      res.status(403).json({success: false, message: 'Missing data'});
+      res.status(403).json({ success: false, message: 'Missing data' });
       return;
     }
     if (release_date > expire_date){
@@ -127,7 +143,7 @@ router.post('', upload.single('image'), async (req, res) => {
     // Check if file was uploaded
     if (!req.file) {
       //send error message
-      res.status(403).json({success: false, message: 'No image provided'});
+      res.status(403).json({ success: false, message: 'No image provided' });
       return;
     } else {
       // Access the uploaded file
@@ -141,7 +157,7 @@ router.post('', upload.single('image'), async (req, res) => {
         }
         res
           .status(403)
-          .json({success: false, message: "Le fichier n'est pas une image"});
+          .json({ success: false, message: "Le fichier n'est pas une image" });
         return;
       } else {
         var imageName = uploadedFile.filename;
@@ -210,7 +226,7 @@ router.post('', upload.single('image'), async (req, res) => {
               });
             }
 
-            res.status(200).json({success: true, message: 'Produit ajouté'});
+            res.status(200).json({ success: true, message: 'Produit ajouté' });
           })
           .catch((err) => {
             //delete the uploaded file
@@ -222,7 +238,7 @@ router.post('', upload.single('image'), async (req, res) => {
               err
             );
             // Gérer l'erreur comme vous le souhaitez
-            res.status(500).json({success: false, message: err});
+            res.status(500).json({ success: false, message: err });
             return;
           });
       }
@@ -230,7 +246,7 @@ router.post('', upload.single('image'), async (req, res) => {
   } catch (err) {
     console.error('Erreur lors de l ajout du produit :', err);
     // Gérer l'erreur comme vous le souhaitez
-    res.status(500).json({success: false, message: err});
+    res.status(500).json({ success: false, message: err });
   }
 });
 

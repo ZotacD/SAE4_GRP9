@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Créer une discussion</title>
+    <link rel="stylesheet" href="/css/createChat.css"/>
+  </head>
+  <body>
+    <button onclick="window.location.href='/chat/all'" >Retour</button>
+    <h1>Créer une discussion</h1>
+    <form id="create-chat-form">
+      <label for="chat-name">Nom de la discussion :</label>
+      <input type="text" id="chat-name" name="chat-name" required />
+      <button type="submit">Créer la discussion</button>
+    </form>
+
+    <h2>Ajouter des membres à la discussion</h2>
+<form id="add-member-form">
+  <label for="member-search">Rechercher un membre :</label>
+  <input type="text" id="member-search" name="member-search" list="member-datalist" required />
+  <datalist id="member-datalist"></datalist>
+  <button type="submit">Ajouter le membre</button>
+</form>
+
+<h2>Membres de la discussion</h2>
+<ul id="member-list"></ul>
+
+<button id="validate-chat-btn" type="button">Valider le chat et ouvrir</button>
+
+<script>
+  const email = "<%- email %>";
+
+  const createChatForm = document.getElementById("create-chat-form");
+  const addMemberForm = document.getElementById("add-member-form");
+  const selectedMemberList = document.getElementById("member-list");
+  const validateChatBtn = document.getElementById("validate-chat-btn");
+  const memberSearchInput = document.getElementById("member-search");
+  const memberList = document.getElementById("member-datalist");
+
+  let id_chat = -1;
+  let memberCount = 0
+
+  const generatePeerId = () => {
+    const timestamp = new Date().getTime();
+    const randomString = Math.random().toString(36).substring(2, 10);
+    const peerId = `${timestamp}-${randomString}`;
+    return peerId;
+  };
+
+  async function getMembers() {
+    const q = memberSearchInput.value ? memberSearchInput.value : "@"
+    let response = await fetch(`/api/chat/searchChatUser/` + q, {
+      method: "GET",
+    });
+
+    let data = await response.json();
+
+    data["users"].forEach((user) => {
+      if(email != user.email) {
+        let opt = document.createElement("option")
+        opt.value = user.email
+        memberList.appendChild(opt)
+      }
+    })
+  }
+
+  createChatForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    let response = await fetch("/api/chat/deleteChat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id_chat: id_chat, email: email }),
+    });
+
+    let data = await response.json();
+
+    selectedMemberList.innerHTML = ""
+
+    const name_chat = document.getElementById("chat-name").value;
+
+    response = await fetch("/api/chat/addChat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name_chat: name_chat }),
+    });
+
+    data = await response.json();
+
+    if (data.success) {
+        id_chat = data.id_chat;
+
+        response = await fetch(`/api/chat/addChatMember`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: email, id_chat: id_chat }),
+        });
+    
+        data = await response.json();
+    
+        if (data.success) {
+          const listItem = document.createElement("li");
+          listItem.textContent = email;
+          selectedMemberList.appendChild(listItem);
+          console.log("Le membre a été ajouté avec succès !");
+          memberCount++
+        } else {
+          console.log("Impossible d'ajouter le membre.");
+          return
+        }
+
+        response = await fetch(`/api/chat/addConnection`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: email, id_chat: id_chat, peer_id: generatePeerId() }),
+        });
+    
+        data = await response.json();
+    
+        if (data.success) {
+          console.log("La connexion a bien été créée !");
+        } else {
+          console.log("Impossible de créer la connexion.");
+          return
+        }
+
+      alert("La discussion a été créée avec succès !");
+    } else {
+      alert("Impossible de créer la discussion.");
+    }
+  });
+
+  addMemberForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    if (id_chat == -1) {
+      alert("Veuillez créer une discussion avant d'ajouter des membres.");
+      return;
+    }
+
+    const selectedEmail = memberSearchInput.value;
+
+    let response = await fetch(`/api/chat/addChatMember`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: selectedEmail, id_chat: id_chat }),
+    });
+
+    let data = await response.json();
+
+    if (data.success) {
+      const listItem = document.createElement("li");
+      listItem.textContent = selectedEmail;
+
+      const deleteButton = document.createElement("button");
+      deleteButton.textContent = "Supprimer";
+      deleteButton.addEventListener("click", async () => {
+        response = await fetch(`/api/chat/deleteChat`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: selectedEmail, id_chat: id_chat }),
+        });
+    
+        data = await response.json();
+
+        if(data.success) {
+          selectedMemberList.removeChild(listItem)
+        }else {
+          alert("Impossible de supprimer cette utilisateur")
+        }
+      });
+      listItem.appendChild(deleteButton);
+
+      selectedMemberList.appendChild(listItem);
+      console.log("Le membre a été ajouté avec succès !");
+      memberCount++
+    } else {
+      console.log("Impossible d'ajouter le membre.");
+      return
+    }
+
+    //Connection
+
+    response = await fetch(`/api/chat/addConnection`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: selectedEmail, id_chat: id_chat, peer_id: generatePeerId() }),
+    });
+
+    data = await response.json();
+
+    if (data.success) {
+      console.log("La connexion a bien été créée !");
+    } else {
+      console.log("Impossible de créer la connexion.");
+      return
+    }
+  });
+
+  validateChatBtn.addEventListener("click", () => {
+    if (id_chat && memberCount >= 2) {
+      window.location.href = `/chat/${id_chat}`;
+    } else if (id_chat == -1) {
+      alert("Veuillez créer une discussion avant de valider.");
+    } else if (memberCount < 2) {
+      alert("Veuillez ajouter au moins un autre membre à la discussion.");
+    }
+  });
+
+  window.onload = (async () => {
+    await getMembers();
+  })
+</script>
+
+  </body>
+</html>

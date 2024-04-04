@@ -8,14 +8,14 @@ DROP TABLE IF EXISTS `chat`;
 DROP TABLE IF EXISTS `product_size`;
 DROP TABLE IF EXISTS `product_color`;
 DROP TABLE IF EXISTS `color`;
-DROP TABLE IF EXISTS `product`;
 DROP TABLE IF EXISTS `transactionContent`;
 DROP TABLE IF EXISTS `transaction`;
-DROP TABLE IF EXISTS `grade`;
 DROP TABLE IF EXISTS `inscription`;
 DROP TABLE IF EXISTS `usersToRenew`;
 DROP TABLE IF EXISTS `user`;
 DROP TABLE IF EXISTS `event`;
+DROP TABLE IF EXISTS `product`;
+DROP TABLE IF EXISTS `grade`;
 
 CREATE TABLE `event` (
   `id` integer PRIMARY KEY,
@@ -60,7 +60,7 @@ CREATE TABLE `inscription` (
 );
 
 CREATE TABLE `product` (
-  `id` int PRIMARY KEY,
+  `id` int PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(255),
   `price` float,
   `description` varchar(255),
@@ -73,7 +73,7 @@ CREATE TABLE `product` (
 );
 
 CREATE TABLE `color` (
-  `id` int PRIMARY KEY,
+  `id` int PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(255)
 );
 
@@ -115,7 +115,7 @@ CREATE TABLE `transactionContent` (
 
 CREATE TABLE `chat` (
   `id_chat` int PRIMARY KEY AUTO_INCREMENT,
-  `name_chat` varchar(100) NOT NULL
+  `name_chat` text NOT NULL
 );
 
 CREATE TABLE `chat_member` (
@@ -127,14 +127,48 @@ CREATE TABLE `chat_member` (
 );
 
 CREATE TABLE `message` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `id_message` int PRIMARY KEY AUTO_INCREMENT,
   `id_chat` int,
   `email` VARCHAR(255),
-  `contenu` text,
+  `content` text,
   `send_date` datetime,
   FOREIGN KEY (`id_chat`) REFERENCES `chat` (`id_chat`),
   FOREIGN KEY (`email`) REFERENCES `user` (`email`)
 );
+
+CREATE TABLE `chat_connection` (
+  `id_chat` int,
+  `email` VARCHAR(255),
+  `peer_id` VARCHAR(255),
+  `connect_date` datetime,
+  PRIMARY KEY(`id_chat`, `email`),
+  FOREIGN KEY (`id_chat`) REFERENCES `chat` (`id_chat`),
+  FOREIGN KEY (`email`) REFERENCES `user` (`email`)
+);
+
+
+
+DELIMITER //
+CREATE TRIGGER delete_chat_after_last_member_deleted
+AFTER DELETE ON chat_connection
+FOR EACH ROW
+BEGIN
+  -- Récupère l'ID du chat depuis la table deleted
+  DECLARE id_chat INT;
+  SET id_chat = OLD.id_chat;
+
+  -- Vérifie s'il s'agit de la dernière relation pour ce chat
+  IF (SELECT COUNT(*) FROM chat_member WHERE id_chat = id_chat) = 0 AND (SELECT COUNT(*) FROM chat_connection WHERE id_chat = id_chat) = 0 THEN
+  BEGIN
+    -- Supprime le chat de la table chat
+    DELETE FROM message WHERE id_chat = id_chat;
+    DELETE FROM chat WHERE id_chat = id_chat;
+  END;
+  END IF;
+END//
+DELIMITER ;
+
+
 
 
 
@@ -238,17 +272,29 @@ VALUES (
   );
 
 -- chat
-INSERT INTO `chat`
-VALUES (NULL, 'chat_1'),
-  (NULL, 'chat_2');
+-- INSERT INTO `chat`
+-- VALUES (NULL, 'chat_1'),
+--   (NULL, 'chat_2');
 
 -- product
 INSERT INTO `product`
 VALUES (
+    1,
+    'Produit supprimé',
+    0,
+    'Produit supprimé',
+    '',
+    '2024-01-24 19:00:00',
+    '2024-01-24 20:00:00',
+    NULL,
+    NULL,
+    NULL
+  ),
+  (
     2,
     'Pull 2023-2024',
     27.5,
-    'Le pull officiel du département informatique pour l\'année 2023-2024. Design par Mathéo Orgé.',
+    'Le pull officiel du département informatique pour l\ année 2023-2024. Design par Mathéo Orgé.',
     'image-1706202613813.png',
     '2024-01-24 19:00:00',
     '2024-02-15 20:00:00',
@@ -270,26 +316,26 @@ VALUES (
   );
 
 -- chat_member
-INSERT INTO `chat_member`
-VALUES ('John.Doe.Etu@univ-lemans.fr', 1),
-  ('admin@univ-lemans.fr', 1);
+-- INSERT INTO `chat_member`
+-- VALUES ('John.Doe.Etu@univ-lemans.fr', 1),
+--   ('admin@univ-lemans.fr', 1);
 
 -- message
-INSERT INTO `message`
-VALUES (
-    NULL,
-    1,
-    'John.Doe.Etu@univ-lemans.fr',
-    'Contenu du message 1',
-    '2024-01-21 22:38:18'
-  ),
-  (
-    NULL,
-    1,
-    'admin@univ-lemans.fr',
-    'Contenu du message 2',
-    '2024-01-21 22:38:18'
-  );
+-- INSERT INTO `message`
+-- VALUES (
+--     NULL,
+--     1,
+--     'John.Doe.Etu@univ-lemans.fr',
+--     'Contenu du message 1',
+--     '2024-01-21 22:38:18'
+--   ),
+--   (
+--     NULL,
+--     1,
+--     'admin@univ-lemans.fr',
+--     'Contenu du message 2',
+--     '2024-01-21 22:38:18'
+--   );
 
 -- event
 INSERT INTO `event`
@@ -388,5 +434,6 @@ VALUES (
 
 
 USE bdeinfo;
-GRANT ALL PRIVILEGES ON bdeinfo.* TO 'etu'@'%' IDENTIFIED BY 'allezlefoot' WITH GRANT OPTION;
+REVOKE ALL PRIVILEGES ON bdeinfo.* FROM 'etu'@'%';
+GRANT SELECT, UPDATE, DELETE, INSERT ON bdeinfo.* TO 'etu'@'%' IDENTIFIED BY 'allezlefoot';
 flush privileges;
