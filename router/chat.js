@@ -4,6 +4,9 @@ import fetch from 'node-fetch';
 const router = express.Router();
 import {pool} from '../server.js';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 router.get('/create', async (req, res) => {
   if (!req.session.isLoggedIn) {
     res.redirect('/login');

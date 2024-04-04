@@ -48,6 +48,9 @@
         const usersList = document.getElementById("users");
         const memberDataList = document.getElementById("member-datalist");
 
+        const connections = {};
+        let myPeerId = -1;
+
         messageForm.addEventListener("submit", async (ev) => {
             ev.preventDefault();
             await sendMessage(peer);
@@ -60,9 +63,21 @@
 
         const id_chat = "<%- id_chat %>";
         const email = "<%- email %>";
-        const connections = <%- JSON.stringify(connections) %>; 
         const messages = <%- JSON.stringify(messages) %>; 
         const username = "<%- username %>";
+
+        async function getConnections() {
+            const response = await fetch('/api/chat/getConnections', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({id_chat: id_chat})
+              });
+            const data = await response.json();
+      
+            return data["connections"]
+        }
 
         let peer;
 
@@ -177,37 +192,52 @@
 
         async function sendMessage(peer) {
             const message = username.toLocaleUpperCase() + " : " + messageInput.value;
-    
+          
             const response = await fetch('/api/chat/addMessage', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({id_chat: id_chat, email: email, content: message})
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({id_chat: id_chat, email: email, content: message})
             });
             const data = await response.json();
-    
-            appendMessage(message, false);
-    
-            connections.forEach((conn) => {
-                  sendPeerMessage(peer, conn.peer_id, message)
-            });
-    
-            messageInput.value = '';
-        }
-      
-        async function sendPeerMessage(peer, peer_id, message) {
-          const connection = peer.connect(peer_id);
-          connection.on('open', async () => {
-            connection.send(message)
-          });
-      
-          connection.on('close', (err) => {
-          });
+          
+            const connections = await getConnections();
+          
+            const existingConnections = await getConnections();
 
-          connection.on('error', (err) => {
-          });
+            for (const conn of existingConnections) {
+                const peer_id = conn.peer_id;
+                if(peer_id == peer._id) continue
+                if (connections[peer_id]) {
+                // réutiliser la connexion existante
+                    sendPeerMessage(connections[peer_id], message);
+                } else {
+                // créer une nouvelle connexion
+                    const newConn = peer.connect(peer_id);
+                    connections[peer_id] = newConn;
+                    newConn.on('open', () => {
+                        console.log("New connection : " + newConn.peer)
+                        console.log("Sending messages")
+                        sendPeerMessage(newConn, message);
+                    });
+
+                    newConn.on('error', (err) => {
+                        console.log("New connection error : " + err)
+                    });
+                }
+            }
+
+                appendMessage(message, false);
+
+                messageInput.value = '';
+            }
+
+        function sendPeerMessage(conn, message) {
+            conn.send(message);
         }
+          
+          
 
         async function getConnection() {
             const response = await fetch('/api/chat/getConnection', {
@@ -228,16 +258,25 @@
               return;
           }
       
-          peer = new Peer(data["peer_id"]);
+          peer = new Peer(data["peer_id"], {
+                host: '172.18.69.9',
+                port: 443,
+                path: '/peerjs',
+            }
+          );
+          console.log(peer)
       
           peer.on('open', async (id) => {
+            console.log("local peer opened")
               handleIncomingConnection(peer);
           });
       
           peer.on('close', () => {
+            console.log("local peer closed")
           });
       
           peer.on('error', (e) => {
+            console.log("local peer error : " + e)
           });
 
           messages.forEach((message) => {

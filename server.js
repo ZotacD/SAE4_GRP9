@@ -775,7 +775,7 @@ export {
 import fs from 'fs';
 
 const PORT = process.env.PORT || 443;
-https
+const server = https
   .createServer(
     {
       key: fs.readFileSync('server-key.pem'),
@@ -786,5 +786,15 @@ https
   .listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
+
+//PEERJS
+import { ExpressPeerServer } from 'peer'
+const peerServer = ExpressPeerServer(server, {
+  debug: true
+});
+app.use('/peerjs', peerServer);
+peerServer.on('connection', (client) => { console.log('client connected');});
+peerServer.on('disconnect', (client) => { console.log('client disconnected');});
+//PEERJS
 
 export default app;
