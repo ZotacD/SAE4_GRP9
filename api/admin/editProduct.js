@@ -156,6 +156,20 @@ router.post('', upload.single('image'), async (req, res) => {
       }
     }
 
+    let exists;
+
+    try {
+      // Check if a product is already promoted
+      [exists] = await pool.query(
+        'SELECT * FROM product WHERE is_promoted = 1 AND id <> ?;',
+        [id]
+      );
+    } catch (err){
+      console.error('Impossible de récupérer le produit mis en avant :', err);
+      res.status(500).json({ error: 'Impossible de récupérer le produit mis en avant' });
+      return;
+    }
+
     if (
       !is_promoted ||
       is_promoted === '0' ||
@@ -164,6 +178,9 @@ router.post('', upload.single('image'), async (req, res) => {
       is_promoted === 'off'
     ) {
       is_promoted = 0;
+    } else if(exists.length > 0){
+      res.status(410).json({ success: false, message: 'Impossible de modifier ce produit, un autre est déjà mis en avant.\n Veuillez d\'abord modifier celui mis en avant' });
+      return;
     } else {
       is_promoted = 1;
     }
