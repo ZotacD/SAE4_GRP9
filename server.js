@@ -404,7 +404,9 @@ async function addUserToEventWithXp(
         'SELECT * FROM usersToRenew WHERE user = ?',
         [email]
       );
-
+      
+      console.log(usersToRenewResults);
+      
       if (usersToRenewResults.length === 0) {
         //add the user and the grade to the usersToRenew table
         console.log('Adding user the users to renew list');
@@ -414,6 +416,7 @@ async function addUserToEventWithXp(
           [req.session.grade]
         );
         const gradeId = gradeResults['0'].id;
+        console.log(gradeId)
 
         await pool.query(
           'INSERT INTO usersToRenew (user, grade) VALUES (?, ?)',
@@ -570,6 +573,9 @@ app.use('/api/admin/product/edit', editProduct);
 
 import getProducts from './api/admin/getProducts.js';
 app.use('/api/admin/products', getProducts);
+
+import removeProduct from './api/admin/removeProduct.js';
+app.use('/api/admin/product/remove', removeProduct);
 
 import addProductBuyer from './api/admin/addProductBuyer.js';
 app.use('/api/admin/products/addBuyer', addProductBuyer);
