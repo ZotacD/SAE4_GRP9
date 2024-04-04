@@ -47,7 +47,7 @@
     }
 
     async function leaveChat(id_chat) {
-      let response = await fetch('https://localhost:8000/api/chat/deleteChat', {
+      let response = await fetch('https://localhost:'+ process.env.PORT +'/api/chat/deleteChat', {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

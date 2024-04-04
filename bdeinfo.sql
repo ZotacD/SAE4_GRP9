@@ -8,14 +8,14 @@ DROP TABLE IF EXISTS `chat`;
 DROP TABLE IF EXISTS `product_size`;
 DROP TABLE IF EXISTS `product_color`;
 DROP TABLE IF EXISTS `color`;
-DROP TABLE IF EXISTS `product`;
 DROP TABLE IF EXISTS `transactionContent`;
 DROP TABLE IF EXISTS `transaction`;
-DROP TABLE IF EXISTS `grade`;
 DROP TABLE IF EXISTS `inscription`;
 DROP TABLE IF EXISTS `usersToRenew`;
 DROP TABLE IF EXISTS `user`;
 DROP TABLE IF EXISTS `event`;
+DROP TABLE IF EXISTS `product`;
+DROP TABLE IF EXISTS `grade`;
 
 CREATE TABLE `event` (
   `id` integer PRIMARY KEY,
