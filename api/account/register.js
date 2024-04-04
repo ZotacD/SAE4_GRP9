@@ -41,9 +41,9 @@ router.post('', async (req, res) => {
   }
 
   await pool.query(
-    'INSERT INTO user (username, password, email, category) VALUES (?, ?, ?, ?)',
+    'INSERT INTO user (username, password, email, category, xp) VALUES (?, ?, ?, ?, ?)',
 
-    [username, password, email, category],
+    [username, password, email, category, 0],
     (err) => {
       if (err) {
         console.error('Impossible de créer le compte :', err);
