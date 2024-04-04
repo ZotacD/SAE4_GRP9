@@ -208,7 +208,7 @@ function clearSearch() {
 function highlightRoom(roomName) {
   const room = document.getElementById(roomName);
   if (roomName === 'Mordor') {
-    alert(
+    userAlert(
       "La salle est au rez de chaussez (elle n'est pas affichée sur le plan)"
     );
     return;

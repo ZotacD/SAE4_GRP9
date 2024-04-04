@@ -23,6 +23,13 @@ router.post('', async (req, res) => {
     return;
   }
 
+  if (req.session.email){
+    if(!(req.session.email === email)){
+      res.status(410).json({error: 'Email non similaire à l\'email de votre compte'});
+      return;
+    }
+  }
+
   // Email found, send the passcode
   console.log('Sending forgotten password passcode email to ' + email + '...');
   const passcode = Math.floor(Math.random() * 1000000);
