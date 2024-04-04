@@ -96,12 +96,12 @@ router.get('', async (req, res) => {
         },
         name: product.name,
         size: item.size,
+        quantity: item.qty,
         price: Number(
           (product.price * (req.session.grade === 'Diamant' ? 0.9 : 1)).toFixed(
             2
           )
         ),
-        quantity: qty,
       });
     }
   }
