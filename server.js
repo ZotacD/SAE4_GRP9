@@ -784,6 +784,10 @@ import fs from 'fs';
 
 const PORT = process.env.PORT || 443;
 const IP = process.env.IP || "localhost";
+
+console.log(IP)
+console.log(PORT)
+
 const server = https
   .createServer(
     {
