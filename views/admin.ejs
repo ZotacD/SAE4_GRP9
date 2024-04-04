@@ -342,16 +342,14 @@
     function addUser(email, eventId) { 
       var areYouSure = confirm('Voulez-vous vraiment ajouter cet utilisateur ?');
       if(!areYouSure) return;
-
-      const xp = prompt("Entrez la quantité d'xp que rapporte cet event à cet utilisateur");
-
+      
       if (email) {
         fetch('/api/admin/addUser', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({email, eventId, xp}),
+          body: JSON.stringify({email, eventId}),
         }).then((res) => {
           if (res.status === 200) {
             userAlertGood('Utilisateur ajouté. Rafraichir la page pour voir les changements');
