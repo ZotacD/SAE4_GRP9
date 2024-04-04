@@ -37,6 +37,7 @@
           <% }) %>
         </select>
         <% } %>
+        <input type="number" id="qty_product"/>
         <p class="price"><%= product.price %>€</p>
         <button onclick="addToCart()" id="buy" tabindex="2">
           Ajouter au panier
@@ -83,8 +84,15 @@
 
     function addToCart() {
       var size = '';
+      var qty = 1;
       if (document.getElementById('sizeSelector')) {
         size = document.getElementById('sizeSelector').value;
+      }
+      if (
+        document.getElementById('qty_product') || 
+        document.getElementById('qty_product').value > 0
+        ){
+        qty = document.getElementById('qty_product').value;
       }
       if (document.getElementById('colorSelector')) {
         const color = document.getElementById('colorSelector').value;
@@ -93,7 +101,7 @@
         size = size.length != 0 ? size + ' ' + color : color;
       }
       const id = parseInt('<%= product.id %>');
-      const data = {size, id};
+      const data = {size, id, qty};
       fetch('/addItemToCartPort', {
         method: 'POST',
         headers: {

@@ -699,6 +699,8 @@
         if (res.status === 200) {
           userAlert('Grades des utilisateurs mis à jour');
           window.location.reload();
+        } else if (res.status === 400){
+          userAlert('Le prix des grades doivent être strictement positifs');
         } else {
           userAlert('Erreur lors de la mise à jour des grades');
         }

@@ -3,7 +3,7 @@ const router = express.Router();
 import {pool} from '../../server.js';
 
 router.post('', async (req, res) => {
-  const { ironprice, goldprice, diamantprice } = req.body;
+  let { ironprice, goldprice, diamantprice } = req.body;
 
   if (!req.session.isLoggedIn || req.session.category !== 'admin') {
     return res.status(403).json({ error: 'Accès refusé' });
