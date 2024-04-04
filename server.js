@@ -133,6 +133,9 @@ app.get('/leaderboard', async (req, res) => {
     isLoggedIn: req.session.isLoggedIn,
   });
 });
+
+import chatRouter from './router/chat.js';
+app.use('/chat', chatRouter);
 //functions stuff
 
 function getVersion() {
@@ -404,7 +407,9 @@ async function addUserToEventWithXp(
         'SELECT * FROM usersToRenew WHERE user = ?',
         [email]
       );
-
+      
+      console.log(usersToRenewResults);
+      
       if (usersToRenewResults.length === 0) {
         //add the user and the grade to the usersToRenew table
         console.log('Adding user the users to renew list');
@@ -414,6 +419,7 @@ async function addUserToEventWithXp(
           [req.session.grade]
         );
         const gradeId = gradeResults['0'].id;
+        console.log(gradeId)
 
         await pool.query(
           'INSERT INTO usersToRenew (user, grade) VALUES (?, ?)',
@@ -571,6 +577,9 @@ app.use('/api/admin/product/edit', editProduct);
 import getProducts from './api/admin/getProducts.js';
 app.use('/api/admin/products', getProducts);
 
+import removeProduct from './api/admin/removeProduct.js';
+app.use('/api/admin/product/remove', removeProduct);
+
 import addProductBuyer from './api/admin/addProductBuyer.js';
 app.use('/api/admin/products/addBuyer', addProductBuyer);
 
@@ -597,6 +606,69 @@ app.use('/api/ndli/getRoom', getNdliRoom);
 
 import getImageLink from './api/divers/getImageLink.js';
 app.use('/getImageLinkPort', getImageLink);
+
+
+
+
+
+
+
+// chat
+import addChat from './api/chat/addChat.js';
+app.use('/api/chat/addChat', addChat);
+
+import addChatMember from './api/chat/addChatMember.js';
+app.use('/api/chat/addChatMember', addChatMember);
+
+import addMessage from './api/chat/addMessage.js';
+app.use('/api/chat/addMessage', addMessage);
+
+import getMessages from './api/chat/getMessages.js';
+app.use('/api/chat/getMessages', getMessages);
+
+import getChat from './api/chat/getChat.js';
+app.use('/api/chat/getChat', getChat);
+
+import getUserChats from './api/chat/getUserChats.js';
+app.use('/api/chat/getUserChats', getUserChats);
+
+import deleteChat from './api/chat/deleteChat.js';
+app.use('/api/chat/deleteChat', deleteChat);
+
+import deleteChatMember from './api/chat/deleteChatMember.js';
+app.use('/api/chat/deleteChatMember', deleteChatMember);
+
+import updateChat from './api/chat/updateChat.js';
+app.use('/api/chat/updateChat', updateChat);
+
+import searchChatUser from './api/chat/searchChatUser.js';
+app.use('/api/chat/searchChatUser', searchChatUser);
+
+import addConnection from './api/chat/addConnection.js';
+app.use('/api/chat/addConnection', addConnection);
+
+import getConnections from './api/chat/getConnections.js';
+app.use('/api/chat/getConnections', getConnections);
+
+import updateConnection from './api/chat/updateConnection.js';
+app.use('/api/chat/updateConnection', updateConnection);
+
+import getConnection from './api/chat/getConnection.js';
+app.use('/api/chat/getConnection', getConnection);
+
+import getChatUsers from './api/chat/getChatUsers.js';
+app.use('/api/chat/getChatUsers', getChatUsers);
+//CHAT
+
+
+
+
+
+
+
+
+
+
 
 app.get('/api/changelogs/:version', (req, res) => {
   const version = req.params.version;
@@ -711,7 +783,7 @@ export {
 import fs from 'fs';
 
 const PORT = process.env.PORT || 443;
-https
+const server = https
   .createServer(
     {
       key: fs.readFileSync('server-key.pem'),
@@ -722,5 +794,15 @@ https
   .listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
+
+//PEERJS
+import { ExpressPeerServer } from 'peer'
+const peerServer = ExpressPeerServer(server, {
+  debug: true
+});
+app.use('/peerjs', peerServer);
+peerServer.on('connection', (client) => { console.log('client connected');});
+peerServer.on('disconnect', (client) => { console.log('client disconnected');});
+//PEERJS
 
 export default app;

@@ -4,8 +4,9 @@ import {pool, addUserToEventWithXp} from '../../server.js';
 import {v4 as uuidv4} from 'uuid';
 
 router.post('', async (req, res) => {
-  const {email, eventId, xp} = req.body;
-
+  const {email, eventId} = req.body;
+  const xp = process.env.XP_AMOUNT;
+  
   if (!req.session.isLoggedIn || req.session.category !== 'admin') {
     res.status(403).json({error: 'Accès refusé'});
     return;

@@ -898,6 +898,8 @@ em {
 }
 
 #loginPassword,
+#loginPassword1,
+#loginPassword2,
 #registerPassword {
     margin-bottom: 0 !important;
 }
@@ -2089,6 +2091,11 @@ p.pdfText {
     header>a:nth-child(1)::before {
         mask-image: url("/images/house.svg");
         -webkit-mask-image: url("/images/house.svg");
+    }
+
+    header>a:nth-child(6)::before {
+        mask-image: url("/images/message.svg");
+        -webkit-mask-image: url("/images/message.svg");
     }
 
     header>a:nth-child(4)::before {
