@@ -423,5 +423,6 @@ VALUES (
 
 
 USE bdeinfo;
-GRANT ALL PRIVILEGES ON bdeinfo.* TO 'etu'@'%' IDENTIFIED BY 'allezlefoot' WITH GRANT OPTION;
+REVOKE ALL PRIVILEGES ON bdeinfo.* FROM 'etu'@'%';
+GRANT SELECT, UPDATE, DELETE, INSERT ON bdeinfo.* TO 'etu'@'%' IDENTIFIED BY 'allezlefoot';
 flush privileges;
