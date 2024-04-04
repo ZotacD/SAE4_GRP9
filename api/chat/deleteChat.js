@@ -7,15 +7,10 @@ router.post('', async (req, res) => {
     const id_chat = req.body['id_chat'];
     const email = req.body['email'];
 
-    console.log(id_chat)
-    console.log(email)
-
     let result = await pool.query(
       'DELETE FROM chat_member WHERE id_chat = ? AND email = ?',
       [id_chat, email],
       );
-
-      console.log(result)
 
     if (result[0].affectedRows === 0) {
       console.log("chat member")

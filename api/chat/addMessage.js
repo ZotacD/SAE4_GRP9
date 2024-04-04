@@ -10,8 +10,6 @@ router.post('', async (req, res) => {
     const content = req.body["content"];
     const send_date = new Date();
 
-    console.log([id_chat, email, content, send_date])
-
     const result = await pool.query(
         'INSERT INTO message (id_message, id_chat, email, content, send_date) VALUES (NULL, ?, ?, ?, ?)',
         [id_chat, email, content, send_date],
