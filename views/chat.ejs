@@ -65,6 +65,8 @@
         const email = "<%- email %>";
         const messages = <%- JSON.stringify(messages) %>; 
         const username = "<%- username %>";
+        const host = "<%- host %>";
+        const port = <%- port %>;
 
         async function getConnections() {
             const response = await fetch('/api/chat/getConnections', {
@@ -259,8 +261,8 @@
           }
       
           peer = new Peer(data["peer_id"], {
-                host: '172.18.69.9',
-                port: 443,
+                host: host,
+                port: port,
                 path: '/peerjs',
             }
           );

@@ -97,7 +97,9 @@ router.get('/all', async (req, res) => {
             email: req.session.email,
             messages: messages,
             connections: connections,
-            username: req.session.username
+            username: req.session.username,
+            port: process.env.PORT,
+            host: process.env.HOST
         })
     } catch (err) {
       console.error(err.message);

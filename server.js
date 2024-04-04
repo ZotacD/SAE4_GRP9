@@ -783,6 +783,7 @@ export {
 import fs from 'fs';
 
 const PORT = process.env.PORT || 443;
+const HOST = process.env.HOST || "localhost";
 const server = https
   .createServer(
     {
@@ -791,8 +792,8 @@ const server = https
     },
     app
   )
-  .listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  .listen(PORT, HOST, () => {
+    console.log(`Server running on port ${PORT} with address ${HOST}`);
   });
 
 //PEERJS

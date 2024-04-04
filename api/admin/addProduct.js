@@ -241,6 +241,7 @@ router.post('', upload.single('image'), async (req, res) => {
           });
       }
     }
+  }
   } catch (err) {
     console.error('Erreur lors de l ajout du produit :', err);
     // Gérer l'erreur comme vous le souhaitez
