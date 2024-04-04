@@ -48,6 +48,33 @@ router.post('', upload.single('image'), async (req, res) => {
       confirm_threashold = null;
     }
 
+    if (release_date > expire_date){
+      res.status(403).json({success: false, message: 'Enter valide data'});
+      return;
+    }
+
+    if (!name || !description || !price || !release_date || !expire_date) {
+      // Supprimer le fichier téléchargé s'il existe
+      if (req.file) {
+        fs.unlinkSync(req.file.path);
+      }
+      res.status(403).json({success: false, message: 'Tous les champs sont requis'});
+      return;
+    }
+
+    // Convertir la virgule en point pour le prix
+    price = price.replace(',', '.');
+
+    // Vérifier si le prix est strictement positif
+    if (parseFloat(price) <= 0 || isNaN(parseFloat(price))) {
+      // Supprimer le fichier téléchargé s'il existe
+      if (req.file) {
+        fs.unlinkSync(req.file.path);
+      }
+      res.status(403).json({success: false, message: 'Le prix doit être strictement positif'});
+      return;
+    }
+
     var color = null;
     if (colors !== '') {
       colors = colors.replace(' ', '');

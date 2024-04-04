@@ -224,7 +224,6 @@ DELIMITER ;
 
 
 
-
 -- color
 INSERT INTO `color`
 VALUES (1, 'rouge'),

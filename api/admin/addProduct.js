@@ -32,7 +32,7 @@ router.post('', upload.single('image'), async (req, res) => {
       return;
     }
     //extract data from multipart form
-    var {
+    let {
       name,
       description,
       price,
@@ -48,7 +48,15 @@ router.post('', upload.single('image'), async (req, res) => {
       confirm_threashold = null;
     }
 
-    let exists;
+    price = price.replace(',', '.');
+
+    if (parseFloat(price) <= 0 || isNaN(parseFloat(price))) {
+      if (req.file) {
+        fs.unlinkSync(req.file.path);
+      }
+      res.status(403).json({success: false, message: 'Le prix doit être strictement positif'});
+
+      let exists;
 
     try {
       // Check if a product is already promoted
@@ -76,7 +84,6 @@ router.post('', upload.single('image'), async (req, res) => {
       is_promoted = 1;
     }
 
-    //check all the fields are filled
     if (
       name === '' ||
       description === '' ||
@@ -89,6 +96,10 @@ router.post('', upload.single('image'), async (req, res) => {
         fs.unlinkSync(req.file.path);
       }
       res.status(403).json({ success: false, message: 'Missing data' });
+      return;
+    }
+    if (release_date > expire_date){
+      res.status(403).json({success: false, message: 'Enter valide data'});
       return;
     }
     var colors;
@@ -108,7 +119,6 @@ router.post('', upload.single('image'), async (req, res) => {
       }
     }
 
-    var sizes;
     if (sizes === '') {
       sizes = null;
     } else {

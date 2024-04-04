@@ -12,8 +12,8 @@ router.post('', async (req, res) => {
   }
 
   const [usernameResults] = await pool.query(
-    'SELECT email, username FROM user WHERE username LIKE ?',
-    ['%' + value + '%'],
+    'SELECT email, username FROM user WHERE username LIKE ? AND category<> ?',
+    ['%' + value + '%', 'admin'],
     (err) => {
       if (err) {
         console.error('Impossible de récupérer les utilisateurs :', err);

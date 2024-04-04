@@ -15,48 +15,50 @@
   <body data-theme="light">
     <%- include('header', {cartSize, isLoggedIn}) %>
     <div class="productContainer">
-      <img id="img" src="/products/<%= product.image %>" />
-      <div class="desc">
-        <h1><%= product.name %></h1>
-        <p class="available_until"></p>
-        <p class="description"><%= product.description %></p>
-        <% if(colors.length === 1){ %>
-        <p class="color">Couleur : <%= colors[0] %></p>
-        <% }else if(colors.length > 1){ %>
-        <label for="colorSelector">Couleur :</label>
-        <select name="color" id="colorSelector">
-          <% colors.forEach((color)=> { %>
-          <option value="<%= color %>"><%= color %></option>
-          <% }) %>
-        </select>
-        <% } if(sizes.length > 0) { %>
-        <label for="sizeSelector">Taille :</label>
-        <select name="size" id="sizeSelector">
-          <% sizes.forEach((size)=> { %>
-          <option value="<%= size.name %>"><%= size.name %></option>
-          <% }) %>
-        </select>
-        <% } %>
-        <p class="price"><%= product.price %>€</p>
-        <button onclick="addToCart()" id="buy" tabindex="2">
-          Ajouter au panier
-        </button>
-        <% if(product.confirm_threashold){ %>
-        <div class="progression">
-          <div
-            class="progressionBar"
-            style="--progress: <%= product.progress %>%"
-          >
-            <div class="inside"></div>
-          </div>
-          <p>
-            Commandes : <%= product.orderCount %>/<%= product.confirm_threashold
-            %><sup><em>1</em></sup>
-          </p>
-        </div>
-        <% } %>
+  <img id="img" src="/products/<%= product.image %>" />
+  <div class="desc">
+    <h1><%= product.name %></h1>
+    <p class="available_until"></p>
+    <p class="description"><%= product.description %></p>
+    <% if(colors.length === 1){ %>
+    <p class="color">Couleur : <%= colors[0] %></p>
+    <% }else if(colors.length > 1){ %>
+    <label for="colorSelector">Couleur :</label>
+    <select name="color" id="colorSelector">
+      <% colors.forEach((color)=> { %>
+      <option value="<%= color %>"><%= color %></option>
+      <% }) %>
+    </select>
+    <% } if(sizes.length > 0) { %>
+    <label for="sizeSelector">Taille :</label>
+    <select name="size" id="sizeSelector">
+      <% sizes.forEach((size)=> { %>
+      <option value="<%= size.name %>"><%= size.name %></option>
+      <% }) %>
+    </select>
+    <% } %>
+    <input type="number" id="qty_product" value="1" min="1">
+    <p class="price"><%= product.price %>€</p>
+    <button onclick="addToCart()" id="buy" tabindex="2">
+      Ajouter au panier
+    </button>
+    <% if(product.confirm_threashold){ %>
+    <div class="progression">
+      <div
+        class="progressionBar"
+        style="--progress: <%= product.progress %>%"
+      >
+        <div class="inside"></div>
       </div>
+      <p>
+        Commandes : <%= product.orderCount %>/<%= product.confirm_threashold
+        %><sup><em>1</em></sup>
+      </p>
     </div>
+    <% } %>
+  </div>
+</div>
+
     <% if(product.confirm_threashold){ %>
     <p id="indicator">
       <sup><em>1</em></sup
@@ -83,8 +85,15 @@
 
     function addToCart() {
       var size = '';
+      var qty = 1;
       if (document.getElementById('sizeSelector')) {
         size = document.getElementById('sizeSelector').value;
+      }
+      if (
+        document.getElementById('qty_product') || 
+        document.getElementById('qty_product').value > 0
+        ){
+        qty = document.getElementById('qty_product').value;
       }
       if (document.getElementById('colorSelector')) {
         const color = document.getElementById('colorSelector').value;
@@ -93,7 +102,7 @@
         size = size.length != 0 ? size + ' ' + color : color;
       }
       const id = parseInt('<%= product.id %>');
-      const data = {size, id};
+      const data = {size, id, qty};
       fetch('/addItemToCartPort', {
         method: 'POST',
         headers: {
@@ -105,7 +114,7 @@
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
-            location.href = '/pay';
+            location.href = '/shop';
           } else {
             userAlert('Une erreur est survenue : ' + data.message);
           }

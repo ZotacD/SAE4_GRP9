@@ -89,17 +89,37 @@ document.getElementById('payButton').addEventListener('click', () => {
 });
 
 function useCartItems(cart) {
-  console.log(cart);
   let total = 0;
   cart.forEach((item) => {
     const listItem = document.createElement('li');
-
     listItem.classList.add('cartItem');
-    const spanItem = document.createElement('span');
 
+    const spanItem = document.createElement('span');
     const title = document.createElement('p');
     const priceElement = document.createElement('p');
     const toggleSelector = document.createElement('div');
+    
+
+    if (typeof item.identifier.quantity !== 'undefined'){
+      const quantityInput = document.createElement('input');
+      const qty = item.identifier.quantity;
+      listItem.setAttribute('data-qty', qty);
+      quantityInput.type = 'number';
+      quantityInput.min = '1';
+      quantityInput.value = item.quantity;
+      quantityInput.addEventListener('change', function(event) {
+        const newQuantity = parseInt(event.target.value);
+        const itemPrice = parseFloat(event.target.parentElement.parentElement.getAttribute('data-price'));
+        const totalPriceElement = document.getElementById('priceTitle');
+        const currentTotalPrice = parseFloat(totalPriceElement.innerText.replace('Total: ', '').replace('€', ''));
+        const totalPrice = currentTotalPrice - (item.quantity * itemPrice) + (newQuantity * itemPrice);
+        totalPriceElement.innerText = `Total: ${totalPrice.toFixed(2)}€`;
+        item.quantity = newQuantity;
+
+        updateCartItemQuantity(id, type, newQuantity);
+      });
+    }
+
     const id = item.identifier.id;
     const type = item.identifier.type;
     let name = item.name;
@@ -107,16 +127,23 @@ function useCartItems(cart) {
       name += ' (' + item.size.toUpperCase() + ')';
     }
     const price = item.price;
-    total += price;
+    total += price * item.quantity; // Modifier le calcul du total en fonction de la quantité initiale
+    
+
     title.innerText = name;
-    priceElement.innerText = price.toFixed(2) + '€';
+    priceElement.innerText = (price * item.quantity).toFixed(2) + '€'; // Ajuster le prix en fonction de la quantité initiale
     toggleSelector.classList.add('toggleSelector');
+
     listItem.setAttribute('data-id', id);
     listItem.setAttribute('data-type', type);
     listItem.setAttribute('data-price', price);
+    
+
+    
 
     spanItem.appendChild(title);
     spanItem.appendChild(priceElement);
+    spanItem.appendChild(quantityInput);
     spanItem.appendChild(toggleSelector);
     listItem.appendChild(spanItem);
 
@@ -126,88 +153,8 @@ function useCartItems(cart) {
   total = total.toFixed(2);
   const totalText = document.getElementById('priceTitle');
   totalText.innerText = `Total: ${total}€`;
-
-  const deleteButton = document.getElementById('deleteButton');
-  deleteButton.addEventListener('click', function (e) {
-    const deleteAllButton = document.getElementById('allSelector');
-    if (deleteAllButton.classList.contains('active')) {
-      emptyCart();
-    } else {
-      const toggles = document.querySelectorAll(
-        '.toggleSelector:not(#allSelector)'
-      );
-
-      toggles.forEach(function (toggle) {
-        if (toggle.classList.contains('active')) {
-          const parent = toggle.parentElement.parentElement;
-          const identifier = {
-            id: parent.getAttribute('data-id'),
-            type: parent.getAttribute('data-type'),
-          };
-          const price =
-            toggle.parentElement.parentElement.getAttribute('data-price');
-          removeItemFromCart(identifier, price);
-          checkEmptyCart();
-        }
-      });
-    }
-  });
-
-  const toggles = document.querySelectorAll(
-    '.toggleSelector:not(#allSelector)'
-  );
-
-  toggles.forEach(function (toggle) {
-    toggle.addEventListener('click', function (e) {
-      toggle.classList.toggle('active');
-
-      //remove the allSelector active class if it is active
-      const allSelector = document.getElementById('allSelector');
-      if (allSelector.classList.contains('active')) {
-        allSelector.classList.remove('active');
-      }
-    });
-  });
-
-  const allSelector = document.getElementById('allSelector');
-  allSelector.addEventListener('click', function (e) {
-    allSelector.classList.toggle('active');
-
-    if (allSelector.classList.contains('active')) {
-      toggles.forEach(function (toggle) {
-        toggle.classList.add('active');
-      });
-    } else {
-      toggles.forEach(function (toggle) {
-        toggle.classList.remove('active');
-      });
-    }
-  });
-
-  if (total > 0) {
-    //TODO
-  } else if (cart.length > 0) {
-    console.log(cart);
-
-    //remove the second step (payment since it's free)
-    document.querySelector('.selectorArrow').remove();
-    document.querySelector('.stepSelector').remove();
-
-    const checkoutFreeEventsButton = document.querySelector(
-      '.nextStepButton.checkout'
-    );
-    checkoutFreeEventsButton.innerText = "S'inscrire gratuitement";
-    //remove previous event listeners
-    checkoutFreeEventsButton.removeEventListener('click', updateTitle);
-    checkoutFreeEventsButton.addEventListener('click', () => {
-      checkout(cart);
-    });
-
-    // document.getElementById('priceTitle').remove();
-    // document.querySelector('.actionContainer').style.justifyContent = 'center';
-  }
-  checkEmptyCart();
 }
+
 
 function checkout(listOfItems) {
   fetch('/api/payment/checkout', {
