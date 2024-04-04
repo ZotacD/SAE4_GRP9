@@ -90,6 +90,8 @@ if (registerForm.classList.contains('emailSubmit')) {
 
       if (response.status === 409) {
         userAlert('Adresse mail déjà utilisée');
+      } else if (response.status === 410) {
+        userAlert('Pseudo déjà utilisé');
       } else if (response.status === 403) {
         userAlert(
           'Si vous réésayez, votre compte sera bani et vous serez signalé au département'
@@ -142,6 +144,8 @@ if (registerForm.classList.contains('emailSubmit')) {
           );
         } else if (response.status === 409) {
           userAlert('Adresse mail déjà utilisée');
+        } else if (response.status === 410) {
+          userAlert('Pseudo déjà utilisé');
         } else if (response.status === 500) {
           userAlert(
             'Impossible de créer le compte, merci de réessayer plus tard'
