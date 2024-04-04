@@ -801,13 +801,13 @@ const server = https
   });
 
 //PEERJS
-import { ExpressPeerServer } from 'peer'
-const peerServer = ExpressPeerServer(server, {
-  debug: true
-});
-app.use('/peerjs', peerServer);
-peerServer.on('connection', (client) => { console.log('client connected');});
-peerServer.on('disconnect', (client) => { console.log('client disconnected');});
+// import { ExpressPeerServer } from 'peer'
+// const peerServer = ExpressPeerServer(server, {
+//   debug: true
+// });
+// app.use('/peerjs', peerServer);
+// peerServer.on('connection', (client) => { console.log('client connected');});
+// peerServer.on('disconnect', (client) => { console.log('client disconnected');});
 //PEERJS
 
 export default app;
