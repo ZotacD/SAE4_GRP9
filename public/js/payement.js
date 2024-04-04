@@ -98,27 +98,7 @@ function useCartItems(cart) {
     const title = document.createElement('p');
     const priceElement = document.createElement('p');
     const toggleSelector = document.createElement('div');
-    
-
-    if (typeof item.identifier.quantity !== 'undefined'){
-      const quantityInput = document.createElement('input');
-      const qty = item.identifier.quantity;
-      listItem.setAttribute('data-qty', qty);
-      quantityInput.type = 'number';
-      quantityInput.min = '1';
-      quantityInput.value = item.quantity;
-      quantityInput.addEventListener('change', function(event) {
-        const newQuantity = parseInt(event.target.value);
-        const itemPrice = parseFloat(event.target.parentElement.parentElement.getAttribute('data-price'));
-        const totalPriceElement = document.getElementById('priceTitle');
-        const currentTotalPrice = parseFloat(totalPriceElement.innerText.replace('Total: ', '').replace('€', ''));
-        const totalPrice = currentTotalPrice - (item.quantity * itemPrice) + (newQuantity * itemPrice);
-        totalPriceElement.innerText = `Total: ${totalPrice.toFixed(2)}€`;
-        item.quantity = newQuantity;
-
-        updateCartItemQuantity(id, type, newQuantity);
-      });
-    }
+    const quantityInput = document.createElement('input');
 
     const id = item.identifier.id;
     const type = item.identifier.type;
@@ -128,7 +108,7 @@ function useCartItems(cart) {
     }
     const price = item.price;
     total += price * item.quantity; // Modifier le calcul du total en fonction de la quantité initiale
-    
+    const qty = item.identifier.quantity;
 
     title.innerText = name;
     priceElement.innerText = (price * item.quantity).toFixed(2) + '€'; // Ajuster le prix en fonction de la quantité initiale
@@ -138,7 +118,21 @@ function useCartItems(cart) {
     listItem.setAttribute('data-type', type);
     listItem.setAttribute('data-price', price);
     
+    listItem.setAttribute('data-qty', qty);
+    quantityInput.type = 'number';
+    quantityInput.min = '1';
+    quantityInput.value = item.quantity;
+    quantityInput.addEventListener('change', function(event) {
+      const newQuantity = parseInt(event.target.value);
+      const itemPrice = parseFloat(event.target.parentElement.parentElement.getAttribute('data-price'));
+      const totalPriceElement = document.getElementById('priceTitle');
+      const currentTotalPrice = parseFloat(totalPriceElement.innerText.replace('Total: ', '').replace('€', ''));
+      const totalPrice = currentTotalPrice - (item.quantity * itemPrice) + (newQuantity * itemPrice);
+      totalPriceElement.innerText = `Total: ${totalPrice.toFixed(2)}€`;
+      item.quantity = newQuantity;
 
+      updateCartItemQuantity(id, type, newQuantity);
+    });
     
 
     spanItem.appendChild(title);

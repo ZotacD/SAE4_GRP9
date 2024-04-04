@@ -150,9 +150,10 @@ span {
 
 .cart>ul>li>span {
     display: grid;
-    grid-template-columns: 40% 1fr auto;
+    grid-template-columns: 40% 1fr auto auto;
     align-items: center;
     position: relative;
+    
 }
 
 .cartItem {
