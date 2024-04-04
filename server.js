@@ -637,9 +637,13 @@ app.post('/removeItemFromCartPort', async (req, res) => {
 });
 
 app.post('/addItemToCartPort', (req, res) => {
-  const {id, size, qty} = req.body;
+  const {size, id, qty} = req.body;
   //get item type from header
   const type = req.headers['item-type'];
+  
+  console.log(id);
+  console.log(size);
+  console.log(qty);
 
   if (!req.session.cart) {
     req.session.cart = [];
@@ -648,9 +652,13 @@ app.post('/addItemToCartPort', (req, res) => {
   const item = req.session.cart.find((item) => item.id === id);
 
   if (!item) {
-    if (size !== undefined && size !== null && type === 'product') {
+    if (size !== undefined && size !== null && size !== '' && type === 'product') {
       req.session.cart.push({type: type, id: id, size: size, qty: qty}); // add the item to the cart if it doesn't exist yet
-    } else req.session.cart.push({type: type, id: id,qty: qty}); // add the item to the cart if it doesn't exist yet
+      console.log(req.session.cart);
+    } else {
+      req.session.cart.push({type: type, id: id,qty: qty}); // add the item to the cart if it doesn't exist yet
+      console.log(req.session.cart);
+    }
   } else {
     res
       .status(409)

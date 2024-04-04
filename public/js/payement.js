@@ -108,7 +108,7 @@ function useCartItems(cart) {
     }
     const price = item.price;
     total += price;
-    const qty = item.identifier.qty;
+    const qty = item.identifier.quantity;
 
     title.innerText = name;
     priceElement.innerText = price.toFixed(2) + '€';

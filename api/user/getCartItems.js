@@ -101,7 +101,7 @@ router.get('', async (req, res) => {
             2
           )
         ),
-        quantity: 1,
+        quantity: qty,
       });
     }
   }
