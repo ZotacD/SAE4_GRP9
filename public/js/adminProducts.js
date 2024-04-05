@@ -151,6 +151,8 @@ function editProduct(id) {
   priceInput.setAttribute('type', 'number');
   priceInput.setAttribute('name', 'price');
   priceInput.setAttribute('placeholder', 'Prix');
+  priceInput.setAttribute('min', '1');
+  priceInput.setAttribute('required');
   priceInput.setAttribute('value', product.price);
 
   const confirmSpan = document.createElement('span');
@@ -164,6 +166,8 @@ function editProduct(id) {
   confirmThreasholdInput.setAttribute('type', 'number');
   confirmThreasholdInput.setAttribute('name', 'confirm_threashold');
   confirmThreasholdInput.setAttribute('placeholder', 'Seuil de confirmation');
+  confirmThreasholdInput.setAttribute('min', '1');
+  confirmThreasholdInput.setAttribute('required');
   confirmThreasholdInput.setAttribute('value', product.confirm_threashold);
 
   priceSpan.appendChild(priceLabel);
