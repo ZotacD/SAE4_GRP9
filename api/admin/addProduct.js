@@ -26,7 +26,7 @@ router.post('', upload.single('image'), async (req, res) => {
       res.redirect('/login?returnUrl=/admin/products');
       return;
     }
-
+    console.log("-3");
     if (req.body.length === 0) {
       res.status(403).json({ success: false, message: 'No data provided' });
       return;
@@ -44,12 +44,15 @@ router.post('', upload.single('image'), async (req, res) => {
       sizes,
     } = req.body;
 
+    console.log(req.body)
+    console.log(name)
+
     if (confirm_threashold === '' || confirm_threashold === '0') {
       confirm_threashold = null;
     }
 
     price = price.replace(',', '.');
-
+    console.log("-2");
     if (parseFloat(price) <= 0 || isNaN(parseFloat(price))) {
       if (req.file) {
         fs.unlinkSync(req.file.path);
@@ -138,7 +141,7 @@ router.post('', upload.single('image'), async (req, res) => {
     price = price.replace(',', '.');
     name = name.trim();
     description = description.trim();
-
+    console.log("-1");
     // Check if file was uploaded
     if (!req.file) {
       //send error message
@@ -147,7 +150,7 @@ router.post('', upload.single('image'), async (req, res) => {
     } else {
       // Access the uploaded file
       const uploadedFile = req.file;
-
+      
       // Check if file is an image
       if (!uploadedFile.mimetype.startsWith('image/')) {
         //delete the uploaded file
@@ -160,7 +163,7 @@ router.post('', upload.single('image'), async (req, res) => {
         return;
       } else {
         var imageName = uploadedFile.filename;
-
+        console.log("0");
         //add product with image
         await pool
           .query(
@@ -182,6 +185,7 @@ router.post('', upload.single('image'), async (req, res) => {
               'SELECT * FROM product WHERE name = ?',
               [name]
             );
+            console.log("1");
 
             const productId = product[0].id;
             if (colors) {
@@ -191,6 +195,7 @@ router.post('', upload.single('image'), async (req, res) => {
                   'SELECT * FROM color WHERE name = ?',
                   [color]
                 );
+                console.log("2");
                 var colorId = 0;
 
                 if (colorExists.length === 0) {
@@ -198,12 +203,14 @@ router.post('', upload.single('image'), async (req, res) => {
                   await pool.query('INSERT INTO color (name) VALUES (?)', [
                     color,
                   ]);
+                  console.log("3");
 
                   //get the id of the color
                   const [colorResults] = await pool.query(
                     'SELECT * FROM color WHERE name = ?',
                     [color]
                   );
+                  console.log("4");
                   colorId = colorResults[0].id;
                 } else {
                   colorId = colorExists[0].id;
@@ -212,9 +219,10 @@ router.post('', upload.single('image'), async (req, res) => {
                   'INSERT INTO product_color (product_id, color_id) VALUES (?, ?)',
                   [productId, colorId]
                 );
+                console.log("5");
               });
             }
-
+            console.log("6");
             if (sizes) {
               //insert into product_size table the product id and the size string
               sizes.forEach(async (size) => {
@@ -224,6 +232,7 @@ router.post('', upload.single('image'), async (req, res) => {
                 );
               });
             }
+            console.log("7");
 
             res.status(200).json({ success: true, message: 'Produit ajouté' });
           })
