@@ -7,13 +7,18 @@ function checkEmptyCart() {
     cart.children[0].remove();
     document.querySelector('.title').remove();
 
+
     //add empty cart info
     const emptyCartContainer = document.createElement('div');
     emptyCartContainer.innerHTML = '<h3 class="centerFlex">Panier vide</h3>';
     cart.appendChild(emptyCartContainer);
 
+    // document.getElementById("priceTitle").value = "Total: 150.00€"
+
     //remove checkout button
     document.querySelector('.actionContainer').remove();
+
+    window.location.reload()
   }
 }
 
