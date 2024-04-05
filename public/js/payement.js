@@ -7,10 +7,13 @@ function checkEmptyCart() {
     cart.children[0].remove();
     document.querySelector('.title').remove();
 
+
     //add empty cart info
     const emptyCartContainer = document.createElement('div');
     emptyCartContainer.innerHTML = '<h3 class="centerFlex">Panier vide</h3>';
     cart.appendChild(emptyCartContainer);
+
+    document.getElementById("priceTitle").value = "Total: 0.00€"
 
     //remove checkout button
     document.querySelector('.actionContainer').remove();
@@ -108,14 +111,16 @@ function useCartItems(cart) {
     if (item.size) {
       name += ' (' + item.size.toUpperCase() + ')';
     }
-    const price = parseFloat(item.price);
-    const qty = parseFloat(item.quantity);
+    let price = parseFloat(item.price);
+    let qty = parseFloat(item.quantity);
+
+    console.log(price, qty, item.price)
     total += price * qty; // Modifier le calcul du total en fonction de la quantité initiale
 
 
 
     title.innerText = name;
-    priceElement.innerText = (price * qty).toFixed(2) + '€'; // Ajuster le prix en fonction de la quantité initiale
+    priceElement.innerText = (price).toFixed(2) + '€'; // Ajuster le prix en fonction de la quantité initiale
     toggleSelector.classList.add('toggleSelector');
 
     listItem.setAttribute('data-id', id);
@@ -135,7 +140,7 @@ function useCartItems(cart) {
       totalPriceElement.innerText = `Total: ${totalPrice.toFixed(2)}€`;
       qty = newQuantity;
 
-      updateCartItemQuantity(id, type, newQuantity);
+      // updateCartItemQuantity(id, type, newQuantity);
     });
 
     spanItem.appendChild(title);
@@ -145,11 +150,94 @@ function useCartItems(cart) {
     listItem.appendChild(spanItem);
 
     document.getElementById('cartList').appendChild(listItem);
+
+
   });
 
   total = total.toFixed(2);
   const totalText = document.getElementById('priceTitle');
   totalText.innerText = `Total: ${total}€`;
+
+  const deleteButton = document.getElementById('deleteButton');
+  deleteButton.addEventListener('click', function (e) {
+    const deleteAllButton = document.getElementById('allSelector');
+    if (deleteAllButton.classList.contains('active')) {
+      emptyCart();
+    } else {
+      const toggles = document.querySelectorAll(
+        '.toggleSelector:not(#allSelector)'
+      );
+
+      toggles.forEach(function (toggle) {
+        if (toggle.classList.contains('active')) {
+          const parent = toggle.parentElement.parentElement;
+          const identifier = {
+            id: parent.getAttribute('data-id'),
+            type: parent.getAttribute('data-type'),
+          };
+          const price =
+            toggle.parentElement.parentElement.getAttribute('data-price');
+          removeItemFromCart(identifier, price);
+          checkEmptyCart();
+        }
+      });
+    }
+  });
+
+  const toggles = document.querySelectorAll(
+    '.toggleSelector:not(#allSelector)'
+  );
+
+  toggles.forEach(function (toggle) {
+    toggle.addEventListener('click', function (e) {
+      toggle.classList.toggle('active');
+
+      //remove the allSelector active class if it is active
+      const allSelector = document.getElementById('allSelector');
+      if (allSelector.classList.contains('active')) {
+        allSelector.classList.remove('active');
+      }
+    });
+  });
+
+  const allSelector = document.getElementById('allSelector');
+  allSelector.addEventListener('click', function (e) {
+    allSelector.classList.toggle('active');
+
+    if (allSelector.classList.contains('active')) {
+      toggles.forEach(function (toggle) {
+        toggle.classList.add('active');
+      });
+    } else {
+      toggles.forEach(function (toggle) {
+        toggle.classList.remove('active');
+      });
+    }
+  });
+
+  if (total > 0) {
+    //TODO
+  } else if (cart.length > 0) {
+    console.log(cart);
+
+    //remove the second step (payment since it's free)
+    document.querySelector('.selectorArrow').remove();
+    document.querySelector('.stepSelector').remove();
+
+    const checkoutFreeEventsButton = document.querySelector(
+      '.nextStepButton.checkout'
+    );
+    checkoutFreeEventsButton.innerText = "S'inscrire gratuitement";
+    //remove previous event listeners
+    checkoutFreeEventsButton.removeEventListener('click', updateTitle);
+    checkoutFreeEventsButton.addEventListener('click', () => {
+      checkout(cart);
+    });
+
+    // document.getElementById('priceTitle').remove();
+    // document.querySelector('.actionContainer').style.justifyContent = 'center';
+  }
+  checkEmptyCart();
 }
 
 
