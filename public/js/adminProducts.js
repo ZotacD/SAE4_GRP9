@@ -381,6 +381,9 @@ function addProduct(e) {
   //send the form data
   fetch('/api/admin/product/add', {
     method: 'POST',
+    headers: {
+      "Content-Type": "application/json"
+    },
     body: formData,
   })
     .then((res) => res.json())
