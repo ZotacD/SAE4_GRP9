@@ -48,7 +48,7 @@
         const usersList = document.getElementById("users");
         const memberDataList = document.getElementById("member-datalist");
 
-        const connections = {};
+        let connections = {};
         let myPeerId = -1;
 
         messageForm.addEventListener("submit", async (ev) => {
@@ -204,7 +204,7 @@
             });
             const data = await response.json();
           
-            const connections = await getConnections();
+            // const connections = await getConnections();
           
             const existingConnections = await getConnections();
 
@@ -216,7 +216,7 @@
                     sendPeerMessage(connections[peer_id], message);
                 } else {
                 // créer une nouvelle connexion
-                console.log(peer)
+                    console.log(peer)
                     const newConn = peer.connect(peer_id);
                     console.log(newConn)
                     connections[peer_id] = newConn;
