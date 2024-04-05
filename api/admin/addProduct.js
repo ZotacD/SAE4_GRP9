@@ -137,6 +137,7 @@ router.post('', upload.single('image'), async (req, res) => {
 
     //sanitize the price, name and description
     price = price.replace(',', '.');
+    confirm_threashold = confirm_threashold.replace(',', '.');
     name = name.trim();
     description = description.trim();
     console.log("-1");
