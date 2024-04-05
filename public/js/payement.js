@@ -108,8 +108,8 @@ function useCartItems(cart) {
     if (item.size) {
       name += ' (' + item.size.toUpperCase() + ')';
     }
-    const price = parseFloat(item.price);
-    const qty = parseFloat(item.quantity);
+    let price = parseFloat(item.price);
+    let qty = parseFloat(item.quantity);
 
     console.log(price, qty, item.price)
     total += price * qty; // Modifier le calcul du total en fonction de la quantité initiale
