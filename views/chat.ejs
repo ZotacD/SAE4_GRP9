@@ -216,7 +216,9 @@
                     sendPeerMessage(connections[peer_id], message);
                 } else {
                 // créer une nouvelle connexion
+                console.log(peer)
                     const newConn = peer.connect(peer_id);
+                    console.log(newConn)
                     connections[peer_id] = newConn;
                     newConn.on('open', () => {
                         console.log("New connection : " + newConn.peer)
