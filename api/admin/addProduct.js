@@ -52,6 +52,7 @@ router.post('', upload.single('image'), async (req, res) => {
         fs.unlinkSync(req.file.path);
       }
       res.status(403).json({success: false, message: 'Le prix doit être strictement positif'});
+      return;
     }
 
     confirm_threashold = confirm_threashold.replace(',', '.');
@@ -60,6 +61,7 @@ router.post('', upload.single('image'), async (req, res) => {
         fs.unlinkSync(req.file.path);
       }
       res.status(403).json({success: false, message: 'Le seuil doit être strictement positif'});
+      return;
     }
     
     let exists;
