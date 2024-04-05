@@ -379,13 +379,8 @@ function addProduct(e) {
   let formData = new FormData(form);
 
   //send the form data
-  formData = JSON.stringify(Object.fromEntries(formData));
-  console.log(formData)
   fetch('/api/admin/product/add', {
     method: 'POST',
-    headers: {
-      "Content-Type": "application/json"
-    },
     body: formData,
   })
     .then((res) => res.json())
