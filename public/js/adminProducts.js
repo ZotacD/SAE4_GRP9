@@ -376,9 +376,10 @@ function addProduct(e) {
   e.preventDefault();
   //get the form data
   const form = document.getElementById('addNewProductForm');
-  const formData = new FormData(form);
+  let formData = new FormData(form);
 
   //send the form data
+  formData = JSON.stringify(Object.fromEntries(formData));
   console.log(formData)
   fetch('/api/admin/product/add', {
     method: 'POST',
