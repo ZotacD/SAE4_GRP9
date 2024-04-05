@@ -394,7 +394,9 @@ function addProduct(e) {
       } else {
         userAlert(data.message);
       }
-    });
+    }).catch((e) => {
+      console.log(e)
+    })
 }
 
 function addBuyerToEvent(eventId) {
