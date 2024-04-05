@@ -13,12 +13,10 @@ function checkEmptyCart() {
     emptyCartContainer.innerHTML = '<h3 class="centerFlex">Panier vide</h3>';
     cart.appendChild(emptyCartContainer);
 
-    // document.getElementById("priceTitle").value = "Total: 150.00€"
+    document.getElementById("priceTitle").value = "Total: 0.00€"
 
     //remove checkout button
     document.querySelector('.actionContainer').remove();
-
-    window.location.reload()
   }
 }
 
