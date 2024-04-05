@@ -99,8 +99,7 @@ function useCartItems(cart) {
     const priceElement = document.createElement('p');
     const toggleSelector = document.createElement('div');
     
-
-    if (typeof item.identifier.quantity !== 'undefined'){
+    
       const quantityInput = document.createElement('input');
       const qty = item.identifier.quantity;
       listItem.setAttribute('data-qty', qty);
@@ -118,7 +117,6 @@ function useCartItems(cart) {
 
         updateCartItemQuantity(id, type, newQuantity);
       });
-    }
 
     const id = item.identifier.id;
     const type = item.identifier.type;
