@@ -136,8 +136,9 @@ function useCartItems(cart) {
       const totalPrice = currentTotalPrice - (qty * itemPrice) + (newQuantity * itemPrice);
       totalPriceElement.innerText = `Total: ${totalPrice.toFixed(2)}€`;
       qty = newQuantity;
+      priceElement.value = (qty * itemPrice)
 
-      updateCartItemQuantity(id, type, newQuantity);
+      // updateCartItemQuantity(id, type, newQuantity);
     });
 
     spanItem.appendChild(title);
