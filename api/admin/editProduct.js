@@ -44,10 +44,6 @@ router.post('', upload.single('image'), async (req, res) => {
       colors,
     } = req.body;
 
-    if (confirm_threashold === '' || confirm_threashold === '0') {
-      confirm_threashold = null;
-    }
-
     if (release_date > expire_date){
       res.status(403).json({success: false, message: 'Enter valide data'});
       return;
@@ -67,6 +63,19 @@ router.post('', upload.single('image'), async (req, res) => {
 
     // Vérifier si le prix est strictement positif
     if (parseFloat(price) <= 0 || isNaN(parseFloat(price))) {
+      // Supprimer le fichier téléchargé s'il existe
+      if (req.file) {
+        fs.unlinkSync(req.file.path);
+      }
+      res.status(403).json({success: false, message: 'Le prix doit être strictement positif'});
+      return;
+    }
+
+    // Convertir la virgule en point pour le prix
+    confirm_threashold = confirm_threashold.replace(',', '.');
+
+    // Vérifier si le prix est strictement positif
+    if (parseFloat(confirm_threashold) <= 0 || isNaN(parseFloat(confirm_threashold))) {
       // Supprimer le fichier téléchargé s'il existe
       if (req.file) {
         fs.unlinkSync(req.file.path);
