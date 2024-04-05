@@ -140,7 +140,7 @@ router.post('', upload.single('image'), async (req, res) => {
     price = price.replace(',', '.');
     name = name.trim();
     description = description.trim();
-
+    console.log("-1");
     // Check if file was uploaded
     if (!req.file) {
       //send error message
@@ -149,7 +149,7 @@ router.post('', upload.single('image'), async (req, res) => {
     } else {
       // Access the uploaded file
       const uploadedFile = req.file;
-
+      
       // Check if file is an image
       if (!uploadedFile.mimetype.startsWith('image/')) {
         //delete the uploaded file
@@ -162,7 +162,7 @@ router.post('', upload.single('image'), async (req, res) => {
         return;
       } else {
         var imageName = uploadedFile.filename;
-
+        console.log("0");
         //add product with image
         await pool
           .query(
