@@ -135,10 +135,6 @@ router.post('', upload.single('image'), async (req, res) => {
       });
     }
 
-    if (confirm_threashold === '' || confirm_threashold === '0') {
-      confirm_threashold = null;
-    }
-
     //sanitize the price, name and description
     price = price.replace(',', '.');
     name = name.trim();
