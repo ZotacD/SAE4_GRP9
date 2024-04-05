@@ -56,8 +56,9 @@ router.post('', upload.single('image'), async (req, res) => {
         fs.unlinkSync(req.file.path);
       }
       res.status(403).json({success: false, message: 'Le prix doit être strictement positif'});
-
-      let exists;
+    }
+    
+    let exists;
 
     try {
       // Check if a product is already promoted
@@ -248,7 +249,6 @@ router.post('', upload.single('image'), async (req, res) => {
           });
       }
     }
-  }
   } catch (err) {
     console.error('Erreur lors de l ajout du produit :', err);
     // Gérer l'erreur comme vous le souhaitez
