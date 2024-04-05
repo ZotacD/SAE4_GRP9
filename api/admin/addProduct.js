@@ -26,7 +26,7 @@ router.post('', upload.single('image'), async (req, res) => {
       res.redirect('/login?returnUrl=/admin/products');
       return;
     }
-
+    console.log("-3");
     if (req.body.length === 0) {
       res.status(403).json({ success: false, message: 'No data provided' });
       return;
@@ -52,7 +52,7 @@ router.post('', upload.single('image'), async (req, res) => {
     }
 
     price = price.replace(',', '.');
-
+    console.log("-2");
     if (parseFloat(price) <= 0 || isNaN(parseFloat(price))) {
       if (req.file) {
         fs.unlinkSync(req.file.path);
