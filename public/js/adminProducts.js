@@ -379,6 +379,7 @@ function addProduct(e) {
   const formData = new FormData(form);
 
   //send the form data
+  console.log(formData)
   fetch('/api/admin/product/add', {
     method: 'POST',
     headers: {
