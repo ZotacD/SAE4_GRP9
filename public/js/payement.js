@@ -147,11 +147,94 @@ function useCartItems(cart) {
     listItem.appendChild(spanItem);
 
     document.getElementById('cartList').appendChild(listItem);
+
+
   });
 
   total = total.toFixed(2);
   const totalText = document.getElementById('priceTitle');
   totalText.innerText = `Total: ${total}€`;
+
+  const deleteButton = document.getElementById('deleteButton');
+  deleteButton.addEventListener('click', function (e) {
+    const deleteAllButton = document.getElementById('allSelector');
+    if (deleteAllButton.classList.contains('active')) {
+      emptyCart();
+    } else {
+      const toggles = document.querySelectorAll(
+        '.toggleSelector:not(#allSelector)'
+      );
+
+      toggles.forEach(function (toggle) {
+        if (toggle.classList.contains('active')) {
+          const parent = toggle.parentElement.parentElement;
+          const identifier = {
+            id: parent.getAttribute('data-id'),
+            type: parent.getAttribute('data-type'),
+          };
+          const price =
+            toggle.parentElement.parentElement.getAttribute('data-price');
+          removeItemFromCart(identifier, price);
+          checkEmptyCart();
+        }
+      });
+    }
+  });
+
+  const toggles = document.querySelectorAll(
+    '.toggleSelector:not(#allSelector)'
+  );
+
+  toggles.forEach(function (toggle) {
+    toggle.addEventListener('click', function (e) {
+      toggle.classList.toggle('active');
+
+      //remove the allSelector active class if it is active
+      const allSelector = document.getElementById('allSelector');
+      if (allSelector.classList.contains('active')) {
+        allSelector.classList.remove('active');
+      }
+    });
+  });
+
+  const allSelector = document.getElementById('allSelector');
+  allSelector.addEventListener('click', function (e) {
+    allSelector.classList.toggle('active');
+
+    if (allSelector.classList.contains('active')) {
+      toggles.forEach(function (toggle) {
+        toggle.classList.add('active');
+      });
+    } else {
+      toggles.forEach(function (toggle) {
+        toggle.classList.remove('active');
+      });
+    }
+  });
+
+  if (total > 0) {
+    //TODO
+  } else if (cart.length > 0) {
+    console.log(cart);
+
+    //remove the second step (payment since it's free)
+    document.querySelector('.selectorArrow').remove();
+    document.querySelector('.stepSelector').remove();
+
+    const checkoutFreeEventsButton = document.querySelector(
+      '.nextStepButton.checkout'
+    );
+    checkoutFreeEventsButton.innerText = "S'inscrire gratuitement";
+    //remove previous event listeners
+    checkoutFreeEventsButton.removeEventListener('click', updateTitle);
+    checkoutFreeEventsButton.addEventListener('click', () => {
+      checkout(cart);
+    });
+
+    // document.getElementById('priceTitle').remove();
+    // document.querySelector('.actionContainer').style.justifyContent = 'center';
+  }
+  checkEmptyCart();
 }
 
 
