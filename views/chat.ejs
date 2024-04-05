@@ -212,17 +212,21 @@
                 if(peer_id == peer._id) continue
                 // créer une nouvelle connexion
                 console.log(peer)
-                const newConn = peer.connect(peer_id);
-                console.log(newConn)
-                newConn.on('open', () => {
-                    console.log("New connection : " + newConn.peer)
-                    console.log("Sending messages")
-                    sendPeerMessage(newConn, message);
-                });
+                try {
+                    const newConn = peer.connect(peer_id);
 
-                newConn.on('error', (err) => {
-                    console.log("New connection error : " + err)
-                });
+                    newConn.on('open', () => {
+                        console.log("New connection : " + newConn.peer)
+                        console.log("Sending messages")
+                        sendPeerMessage(newConn, message);
+                    });
+
+                    newConn.on('error', (err) => {
+                        console.log("New connection error : " + err)
+                    });
+                }catch (e) {
+                    console.log("connection error" + e)
+                }
                 
             }
 
@@ -257,9 +261,8 @@
           }
       
           peer = new Peer(data["peer_id"], {
-                host: "adiil.nextborn.tech",
-                path: '/peerjs',
-                secure: true
+                host: "172.18.69.9",
+                path: '/peerjs'
             }
           );
           console.log(peer)
