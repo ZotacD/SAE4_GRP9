@@ -623,7 +623,7 @@
         body: JSON.stringify(data),
       }).then((res) => {
         if (res.status === 200) {
-          userAlert("Quantité d'xp que rapportent les events modifiée");
+          userAlertGood("Quantité d'xp que rapportent les events modifiée");
           window.location.reload();
         } else if (res.status === 400) {
           userAlert("La quantité d'xp doit être un nombre");
