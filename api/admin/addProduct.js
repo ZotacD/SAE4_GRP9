@@ -46,12 +46,16 @@ router.post('', upload.single('image'), async (req, res) => {
     console.log(req.body)
     console.log(name)
 
-    if (confirm_threashold === '' || confirm_threashold === '0') {
-      confirm_threashold = null;
-    }
-
     price = price.replace(',', '.');
     if (parseFloat(price) <= 0 || isNaN(parseFloat(price))) {
+      if (req.file) {
+        fs.unlinkSync(req.file.path);
+      }
+      res.status(403).json({success: false, message: 'Le prix doit être strictement positif'});
+    }
+
+    confirm_threashold = confirm_threashold.replace(',', '.');
+    if (parseFloat(confirm_threashold) <= 0 || isNaN(parseFloat(confirm_threashold))) {
       if (req.file) {
         fs.unlinkSync(req.file.path);
       }
