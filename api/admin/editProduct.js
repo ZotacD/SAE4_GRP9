@@ -80,7 +80,7 @@ router.post('', upload.single('image'), async (req, res) => {
       if (req.file) {
         fs.unlinkSync(req.file.path);
       }
-      res.status(403).json({success: false, message: 'Le prix doit être strictement positif'});
+      res.status(403).json({success: false, message: 'Le seuil doit être strictement positif'});
       return;
     }
 
