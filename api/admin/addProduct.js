@@ -44,6 +44,9 @@ router.post('', upload.single('image'), async (req, res) => {
       sizes,
     } = req.body;
 
+    console.log(req.body)
+    console.log(name)
+
     if (confirm_threashold === '' || confirm_threashold === '0') {
       confirm_threashold = null;
     }
