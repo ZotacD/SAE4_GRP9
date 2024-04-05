@@ -211,25 +211,25 @@
                 const peer_id = conn.peer_id;
                 if(peer_id == peer._id) continue
                 // créer une nouvelle connexion
-                    console.log(peer)
-                    const newConn = peer.connect(peer_id);
-                    console.log(newConn)
-                    newConn.on('open', () => {
-                        console.log("New connection : " + newConn.peer)
-                        console.log("Sending messages")
-                        sendPeerMessage(newConn, message);
-                    });
+                console.log(peer)
+                const newConn = peer.connect(peer_id);
+                console.log(newConn)
+                newConn.on('open', () => {
+                    console.log("New connection : " + newConn.peer)
+                    console.log("Sending messages")
+                    sendPeerMessage(newConn, message);
+                });
 
-                    newConn.on('error', (err) => {
-                        console.log("New connection error : " + err)
-                    });
-                }
+                newConn.on('error', (err) => {
+                    console.log("New connection error : " + err)
+                });
+                
             }
 
                 appendMessage(message, false);
 
                 messageInput.value = '';
-            }
+        }
 
         function sendPeerMessage(conn, message) {
             conn.send(message);
