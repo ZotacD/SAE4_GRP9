@@ -117,7 +117,7 @@ function useCartItems(cart) {
 
 
     title.innerText = name;
-    priceElement.innerText = (price * qty).toFixed(2) + '€'; // Ajuster le prix en fonction de la quantité initiale
+    priceElement.innerText = (price).toFixed(2) + '€'; // Ajuster le prix en fonction de la quantité initiale
     toggleSelector.classList.add('toggleSelector');
 
     listItem.setAttribute('data-id', id);
@@ -136,7 +136,6 @@ function useCartItems(cart) {
       const totalPrice = currentTotalPrice - (qty * itemPrice) + (newQuantity * itemPrice);
       totalPriceElement.innerText = `Total: ${totalPrice.toFixed(2)}€`;
       qty = newQuantity;
-      priceElement.value = (qty * itemPrice)
 
       // updateCartItemQuantity(id, type, newQuantity);
     });
