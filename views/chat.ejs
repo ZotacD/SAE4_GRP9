@@ -48,7 +48,6 @@
         const usersList = document.getElementById("users");
         const memberDataList = document.getElementById("member-datalist");
 
-        let connections = {};
         let myPeerId = -1;
 
         messageForm.addEventListener("submit", async (ev) => {
@@ -211,31 +210,26 @@
             for (const conn of existingConnections) {
                 const peer_id = conn.peer_id;
                 if(peer_id == peer._id) continue
-                if (connections[peer_id]) {
-                // réutiliser la connexion existante
-                    sendPeerMessage(connections[peer_id], message);
-                } else {
                 // créer une nouvelle connexion
-                    console.log(peer)
-                    const newConn = peer.connect(peer_id);
-                    console.log(newConn)
-                    connections[peer_id] = newConn;
-                    newConn.on('open', () => {
-                        console.log("New connection : " + newConn.peer)
-                        console.log("Sending messages")
-                        sendPeerMessage(newConn, message);
-                    });
+                console.log(peer)
+                const newConn = peer.connect(peer_id);
+                console.log(newConn)
+                newConn.on('open', () => {
+                    console.log("New connection : " + newConn.peer)
+                    console.log("Sending messages")
+                    sendPeerMessage(newConn, message);
+                });
 
-                    newConn.on('error', (err) => {
-                        console.log("New connection error : " + err)
-                    });
-                }
+                newConn.on('error', (err) => {
+                    console.log("New connection error : " + err)
+                });
+                
             }
 
                 appendMessage(message, false);
 
                 messageInput.value = '';
-            }
+        }
 
         function sendPeerMessage(conn, message) {
             conn.send(message);
